@@ -2,16 +2,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
 import { Card } from '../components/ui/Card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../components/ui/Table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
 import { Toast } from '../components/ui/Toast';
+import { Button } from '../components/ui/Button';
 
+// (Keep your existing AnalysisRecord type)
 type AnalysisRecord = {
   id: string;
   created_at: string;
@@ -33,48 +28,37 @@ export default function HistoryPage() {
     const fetchHistory = async () => {
       setIsLoading(true);
       setError(null);
-
       const { data, error } = await supabase
         .from('demo_requests')
         .select('id, created_at, user_input, ai_result')
         .order('created_at', { ascending: false })
         .limit(20);
-
       if (error) {
         setError(error.message);
       } else {
-        setRecords(data);
+        setRecords(data as any);
       }
       setIsLoading(false);
     };
-
     fetchHistory();
   }, []);
 
   return (
     <div>
-        {error && (
-        <Toast
-          message={error}
-          variant="danger"
-          onClose={() => setError(null)}
-        />
-        )}
+      {error && <Toast message={error} variant="danger" onClose={() => setError(null)} />}
       <Card>
         <h1 className="text-2xl font-bold mb-6 text-ink-primary">Analysis History</h1>
         {isLoading && <p className="text-ink-secondary">Loading history...</p>}
-
         {!isLoading && !error && records.length === 0 && (
-          <p className="text-ink-secondary">No history yet.</p>
+          <p className="text-ink-secondary">No analysis history found.</p>
         )}
-
         {!isLoading && !error && records.length > 0 && (
           <Table>
             <TableHead>
               <TableHeader>Created At</TableHeader>
               <TableHeader>File Name</TableHeader>
               <TableHeader>Issue Count</TableHeader>
-              <TableHeader></TableHeader>
+              <TableHeader><span className="sr-only">View</span></TableHeader>
             </TableHead>
             <TableBody>
               {records.map((record) => (
@@ -85,8 +69,8 @@ export default function HistoryPage() {
                   </TableCell>
                   <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
                   <TableCell className="text-right">
-                    <Link href={`/history/${record.id}`} className="text-primary hover:underline">
-                      View
+                    <Link href={`/history/${record.id}`} legacyBehavior>
+                      <a><Button variant="secondary">View</Button></a>
                     </Link>
                   </TableCell>
                 </TableRow>

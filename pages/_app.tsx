@@ -1,5 +1,5 @@
-import '../styles/globals.css';
 import '../styles/acl.css';
+import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { AppShell } from '../components/ui/AppShell';
 
@@ -12,3 +12,4 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+

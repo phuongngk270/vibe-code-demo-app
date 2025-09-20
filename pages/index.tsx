@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+
 export default function Home() {
   return (
-    <div className="text-center py-lg-6">
+    <Card>
+      <div className="text-center py-lg-5">
       <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-ink-primary">
           Welcome to PDF QA Checker
         </h1>
@@ -10,14 +13,19 @@ export default function Home() {
         Upload your PDF to detect typos and formatting issues with ease using AI.
         </p>
       <div className="flex justify-center space-x-4">
-        <Link href="/review">
-          <Button variant="primary">Start New Review</Button>
-        </Link>
-        <Link href="/history">
-          <Button variant="secondary">View History</Button>
-        </Link>
-      </div>
+          <Link href="/review" legacyBehavior>
+            <a>
+              <Button variant="primary">Start New Review</Button>
+            </a>
+          </Link>
+          <Link href="/history" legacyBehavior>
+            <a>
+              <Button variant="secondary">View History</Button>
+            </a>
+          </Link>
     </div>
+      </div>
+    </Card>
   );
 }
 
