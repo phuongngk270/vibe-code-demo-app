@@ -32,7 +32,8 @@ export default function ReviewPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFile(e.target.files[0);
+
+      setFile(e.target.files[0]);
     }
   };
 
@@ -130,3 +131,4 @@ export default function ReviewPage() {
     </div>
   );
 }
+
