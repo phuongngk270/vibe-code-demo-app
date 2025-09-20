@@ -32,7 +32,6 @@ export default function ReviewPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-
       setFile(e.target.files[0]);
     }
   };
@@ -68,6 +67,8 @@ export default function ReviewPage() {
       case 'punctuation': return 'warning';
       case 'formatting': return 'danger';
       case 'spacing': return 'danger';
+      case 'reference': return 'warning';
+      case 'numbering': return 'warning';
       default: return 'default';
     }
   };
@@ -95,7 +96,7 @@ export default function ReviewPage() {
       </Card>
 
       {result && (
-        <Card>
+        <Card className="mt-6">
           <h2 className="text-xl font-semibold mb-2">Analysis for: <span className="font-mono">{result.fileName}</span></h2>
           <p className="mb-4 text-ink-secondary">Total issues found: <strong>{result.summary.issueCount}</strong></p>
           {result.issues.length > 0 ? (
@@ -113,7 +114,7 @@ export default function ReviewPage() {
                   <TableRow key={index}>
                     <TableCell>{issue.page}</TableCell>
                     <TableCell><Badge variant={getBadgeVariant(issue.type)}>{issue.type}</Badge></TableCell>
-                    <TableCell className="max-w-xs truncate">{issue.message}</TableCell>
+                    <TableCell>{issue.message}</TableCell>
                     <TableCell><span className="font-mono text-danger">{issue.original}</span></TableCell>
                     <TableCell><span className="font-mono text-success">{issue.suggestion}</span></TableCell>
                     <TableCell className="text-ink-secondary">{issue.locationHint}</TableCell>

@@ -1,6 +1,7 @@
 import formidable from 'formidable';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { supabase } from './supabaseClient';
+import { createServerSupabase } from './supabaseServer';
 import type { NextApiRequest } from 'next';
 
 const MODEL_TIMEOUT = 120000; // 2 minutes
@@ -109,6 +110,20 @@ export const normalizeData = (data: any, fileName: string) => {
 export const saveToSupabase = async (normalizedData: any) => {
     const { data: dbData, error: dbError } = await supabase
         .from('demo_requests')
+        .insert([{ user_input: normalizedData.fileName, ai_result: normalizedData })
+        .select('id')
+        .single();
+
+    if (dbError) {
+        return { error: dbError };
+    }
+    return { id: dbData.id };
+};
+
+export const saveToSupabaseServer = async (normalizedData: any) => {
+    const supabaseServer = createServerSupabase();
+    const { data: dbData, error: dbError } = await supabaseServer
+        .from('demo_requests')
         .insert([{ user_input: normalizedData.fileName, ai_result: normalizedData }])
         .select('id')
         .single();
@@ -118,4 +133,5 @@ export const saveToSupabase = async (normalizedData: any) => {
     }
     return { id: dbData.id };
 };
+
 
