@@ -17,7 +17,8 @@ type Issue = {
 
 type AnalysisResult = {
   fileName: string;
-  issues: Issue[;
+
+  issues: Issue[];
   summary: {
     issueCount: number;
     pagesAffected: number[];
