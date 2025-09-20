@@ -24,7 +24,6 @@ type AnalysisRecord = {
   };
 };
 
-
 export default function HistoryPage() {
   const [records, setRecords] = useState<AnalysisRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -99,39 +98,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -13,7 +13,8 @@ export const TableHead = ({ children, className = '' }: { children: React.ReactN
   </thead>
 );
 
-export const TableHeader = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
+
+export const TableHeader = ({ children, className = '' }: { children?: React.ReactNode, className?: string }) => (
   <th className={`px-6 py-3 text-left text-xs font-medium text-ink-secondary uppercase tracking-wider ${className}`}>
     {children}
   </th>
@@ -29,8 +30,10 @@ export const TableRow = ({ children, className = '' }: { children: React.ReactNo
   <tr className={`even:bg-frame-bg-alt ${className}`}>{children}</tr>
 );
 
-export const TableCell = ({ children, className = '' }: { children: React.ReactNode, className?: string }) => (
+
+export const TableCell = ({ children, className = '' }: { children?: React.ReactNode, className?: string }) => (
   <td className={`px-6 py-4 whitespace-nowrap text-base text-ink-primary ${className}`}>
     {children}
   </td>
 );
+
