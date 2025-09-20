@@ -53,23 +53,8 @@ export default function HistoryPage() {
   }, []);
 
   return (
-
-
-
-
-
-
-
-
-
-
-
     <div>
         {error && (
-
-
-
-
         <Toast
           message={error}
           variant="danger"
@@ -81,70 +66,8 @@ export default function HistoryPage() {
         {isLoading && <p className="text-ink-secondary">Loading history...</p>}
 
         {!isLoading && !error && records.length === 0 && (
-
           <p className="text-ink-secondary">No history yet.</p>
         )}
-
-        {!isLoading && !error && records.length > 0 && (
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <Table>
-            <TableHead>
-              <TableHeader>Created At</TableHeader>
-              <TableHeader>File Name</TableHeader>
-              <TableHeader>Issue Count</TableHeader>
-              <TableHeader></TableHeader>
-            </TableHead>
-            <TableBody>
-              {records.map((record) => (
-                <TableRow key={record.id}>
-                  <TableCell>{new Date(record.created_at).toLocaleString()}</TableCell>
-                  <TableCell className="font-mono">
-                    {record.ai_result?.fileName || record.user_input}
-                  </TableCell>
-                  <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
-                  <TableCell className="text-right">
-                    <Link href={`/history/${record.id}`} className="text-primary hover:underline">
-                      View
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-
-      </Card>
-    </div>
-  );
-}
-
-        {!isLoading && !error && records.length === 0 && (
-          <p className="text-ink-secondary">No history yet.</p>
-        )}
-
 
         {!isLoading && !error && records.length > 0 && (
           <Table>
@@ -176,4 +99,39 @@ export default function HistoryPage() {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
