@@ -1,0 +1,58 @@
+/* styles/acl.css */
+
+:root {
+  /* Typography */
+  --font-family-primary: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-size-base: 13px;
+  --line-height-base: 20px;
+
+  /* Spacing */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-lg-3: 24px;
+  --spacing-lg-4: 32px;
+  --spacing-lg-5: 40px;
+  --spacing-lg-6: 48px;
+
+  /* Radius */
+  --radius-acl: 4px;
+  --radius-acl-lg: 8px;
+
+  /* Elevation (Shadows) */
+  --shadow-elev-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-elev-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-elev-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-elev-4: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Light Theme Colors */
+  --color-frame-bg: #ffffff;
+  --color-frame-bg-alt: #f1f1f4;
+  --color-frame-border: #e4e4e7;
+  --color-ink-primary: #17171a;
+  --color-ink-secondary: #707078;
+  --color-primary: #006fee;
+  --color-primary-hover: #005bc7;
+  --color-success: #16a34a;
+  --color-warning: #f59e0b;
+  --color-danger: #dc2626;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme Colors */
+  --color-frame-bg: #1C1C1E;
+  --color-frame-bg-alt: #2C2C2E;
+  --color-frame-border: #3A3A3C;
+  --color-ink-primary: #FFFFFF;
+  --color-ink-secondary: #8E8E93;
+  --color-primary: #0A84FF;
+  --color-primary-hover: #3b9eff;
+  --color-success: #34C759;
+  --color-warning: #FF9500;
+  --color-danger: #FF3B30;
+}

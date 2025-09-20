@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '../lib/supabaseClient';
+import { Card } from '../components/ui/Card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../components/ui/Table';
+import { Toast } from '../components/ui/Toast';
 
 type AnalysisRecord = {
   id: string;
@@ -13,6 +23,7 @@ type AnalysisRecord = {
     };
   };
 };
+
 
 export default function HistoryPage() {
   const [records, setRecords] = useState<AnalysisRecord[]>([]);
@@ -42,55 +53,127 @@ export default function HistoryPage() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 sm:p-6">
-      <div className="w-full max-w-4xl mx-auto bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Analysis History</h1>
-          <div>
-            <Link href="/" className="text-blue-500 hover:underline mr-4">Home</Link>
-            <Link href="/review" className="text-blue-500 hover:underline">New Review</Link>
-          </div>
-        </div>
 
-        {isLoading && <p>Loading history...</p>}
+
+
+
+
+
+
+
+
+
+
+    <div>
         {error && (
-          <div className="mt-4 p-4 bg-red-100 dark:bg-red-800 border-red-400 text-red-700 dark:text-red-200 rounded-md">
-            <p className="font-bold">Error</p>
-            <p>{error}</p>
-          </div>
+
+
+
+
+        <Toast
+          message={error}
+          variant="danger"
+          onClose={() => setError(null)}
+        />
         )}
+      <Card>
+        <h1 className="text-2xl font-bold mb-6 text-ink-primary">Analysis History</h1>
+        {isLoading && <p className="text-ink-secondary">Loading history...</p>}
 
         {!isLoading && !error && records.length === 0 && (
-          <p>No history yet.</p>
+
+          <p className="text-ink-secondary">No history yet.</p>
         )}
 
         {!isLoading && !error && records.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Count</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
-                </tr>
-              </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {records.map((record) => (
-                  <tr key={record.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{new Date(record.created_at).toLocaleString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap font-mono">{record.ai_result?.fileName || record.user_input}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{record.ai_result?.summary?.issueCount ?? 'N/A'}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <Link href={`/history/${record.id}`} className="text-blue-500 hover:underline">View</Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <Table>
+            <TableHead>
+              <TableHeader>Created At</TableHeader>
+              <TableHeader>File Name</TableHeader>
+              <TableHeader>Issue Count</TableHeader>
+              <TableHeader></TableHeader>
+            </TableHead>
+            <TableBody>
+              {records.map((record) => (
+                <TableRow key={record.id}>
+                  <TableCell>{new Date(record.created_at).toLocaleString()}</TableCell>
+                  <TableCell className="font-mono">
+                    {record.ai_result?.fileName || record.user_input}
+                  </TableCell>
+                  <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
+                  <TableCell className="text-right">
+                    <Link href={`/history/${record.id}`} className="text-primary hover:underline">
+                      View
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
-      </div>
+
+      </Card>
     </div>
   );
 }
+
+        {!isLoading && !error && records.length === 0 && (
+          <p className="text-ink-secondary">No history yet.</p>
+        )}
+
+
+        {!isLoading && !error && records.length > 0 && (
+          <Table>
+            <TableHead>
+              <TableHeader>Created At</TableHeader>
+              <TableHeader>File Name</TableHeader>
+              <TableHeader>Issue Count</TableHeader>
+              <TableHeader></TableHeader>
+            </TableHead>
+            <TableBody>
+              {records.map((record) => (
+                <TableRow key={record.id}>
+                  <TableCell>{new Date(record.created_at).toLocaleString()}</TableCell>
+                  <TableCell className="font-mono">
+                    {record.ai_result?.fileName || record.user_input}
+                  </TableCell>
+                  <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
+                  <TableCell className="text-right">
+                    <Link href={`/history/${record.id}`} className="text-primary hover:underline">
+                      View
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </Card>
+    </div>
+  );
+}
+
