@@ -16,8 +16,6 @@ export const Badge = ({ children, variant = 'default' }: BadgeProps) => {
     numbering: 'bg-warning/20 text-warning',
   };
 
-
   return <span className={`${baseClasses} ${variantClasses[variant]}`}>{children}</span>;
 };
-
 

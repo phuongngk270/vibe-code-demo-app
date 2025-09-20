@@ -15,14 +15,14 @@ export const Button = ({
   ...props
 }: ButtonProps) => {
   const baseClasses =
-    'inline-flex items-center justify-center rounded-acl px-4 h-9 text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors';
+    'inline-flex items-center justify-center rounded-acl px-4 h-9 text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm';
   
   const variantClasses = {
     primary:
       'bg-primary text-white hover:bg-primary-hover',
     secondary:
-      'bg-frame-bg-alt text-ink-primary border border-frame-border hover:bg-frame-border',
-    ghost: 'text-ink-primary hover:bg-frame-bg-alt',
+      'bg-frame-bg-alt text-ink-primary border border-frame-border hover:bg-gray-100',
+    ghost: 'text-ink-primary hover:bg-primary/5',
   };
 
   return (
@@ -43,3 +43,4 @@ export const Button = ({
     </button>
   );
 };
+

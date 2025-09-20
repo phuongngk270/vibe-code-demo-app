@@ -48,10 +48,25 @@ export default function HistoryPage() {
       {error && <Toast message={error} variant="danger" onClose={() => setError(null)} />}
       <Card>
         <h1 className="text-2xl font-bold mb-6 text-ink-primary">Analysis History</h1>
+
         {isLoading && <p className="text-ink-secondary">Loading history...</p>}
-        {!isLoading && !error && records.length === 0 && (
-          <p className="text-ink-secondary">No analysis history found.</p>
+        {!isLoading && error && (
+          <div className="text-center py-8">
+            <p className="text-danger mb-4">Failed to load analysis history.</p>
+            <p className="text-ink-secondary">{error}</p>
+          </div>
         )}
+
+        {!isLoading && !error && records.length === 0 && (
+
+          <div className="text-center py-8">
+            <p className="text-ink-secondary mb-4">No analysis history found.</p>
+            <Link href="/review" legacyBehavior>
+              <a><Button variant="primary">Start a New Review</Button></a>
+            </Link>
+          </div>
+        )}
+
         {!isLoading && !error && records.length > 0 && (
           <Table>
             <TableHead>
@@ -70,7 +85,8 @@ export default function HistoryPage() {
                   <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
                   <TableCell className="text-right">
                     <Link href={`/history/${record.id}`} legacyBehavior>
-                      <a><Button variant="secondary">View</Button></a>
+
+                      <a><Button variant="ghost">View Details</Button></a>
                     </Link>
                   </TableCell>
                 </TableRow>
@@ -82,3 +98,4 @@ export default function HistoryPage() {
     </div>
   );
 }
+

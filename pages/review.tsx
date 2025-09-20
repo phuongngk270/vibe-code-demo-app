@@ -17,7 +17,7 @@ type Issue = {
 
 type AnalysisResult = {
   fileName: string;
-  issues: Issue[];
+  issues: Issue[;
   summary: {
     issueCount: number;
     pagesAffected: number[];
@@ -78,17 +78,20 @@ export default function ReviewPage() {
       {error && <Toast message={error} variant="danger" onClose={() => setError(null)} />}
       <Card>
         <h1 className="text-2xl font-bold mb-2 text-ink-primary">New PDF Review</h1>
-        <p className="text-ink-secondary mb-6">Upload a PDF to get an AI-powered analysis of typos and formatting issues.</p>
+        <p className="text-ink-secondary mb-6">Upload a PDF to get an AI-powered analysis of typos, formatting issues, and more.</p>
         <form onSubmit={handleSubmit}>
           <div className="flex items-center space-x-4">
-            <input
+            <label className="flex-grow">
+              <span className="sr-only">Choose a file</span>
+              <input
               type="file"
               accept="application/pdf"
               onChange={handleFileChange}
-              className="block w-full text-base text-ink-secondary file:mr-4 file:py-2 file:px-4 file:rounded-acl file:border file:border-frame-border file:text-base file:font-semibold file:bg-frame-bg file:text-ink-primary hover:file:bg-frame-border cursor-pointer"
+                className="block w-full text-base text-ink-secondary file:mr-4 file:py-2 file:px-4 file:rounded-acl file:border file:border-frame-border file:text-base file:font-semibold file:bg-frame-bg-alt file:text-primary hover:file:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               disabled={isLoading}
             />
-            <Button type="submit" isLoading={isLoading} disabled={!file}>
+            </label>
+            <Button type="submit" isLoading={isLoading} disabled={!file || isLoading}>
               Analyze PDF
             </Button>
           </div>
