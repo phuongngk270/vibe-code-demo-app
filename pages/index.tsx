@@ -1,27 +1,57 @@
+import Layout from '@/components/Layout';
 import Link from 'next/link';
-import { Button } from '../components/ui/Button';
+
 export default function Home() {
   return (
-    <div className="text-center py-16 sm:py-24">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-ink-primary tracking-tight">
-        Your AI-Powered PDF Proofreader
-      </h1>
-      <p className="text-lg sm:text-xl text-ink-secondary mb-8 max-w-2xl mx-auto">
-        Automatically detect typos, formatting errors, and other inconsistencies in your PDF documents. Save time and ensure your work is flawless.
-      </p>
-      <div className="flex justify-center space-x-4">
-          <Link href="/review" legacyBehavior>
-            <a>
-            <Button variant="primary">Start a New Review</Button>
-            </a>
+    <Layout>
+      <div className="text-center py-20">
+        <h1 className="text-3xl md:text-4xl font-bold">
+          Catch errors before they cost you.
+        </h1>
+        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          Our AI-powered tool scans your PDF documents for typos, formatting
+          inconsistencies, and other common issues, ensuring professional quality
+          every time.
+        </p>
+        <div className="mt-10 flex justify-center gap-4">
+          <Link
+            href="/review"
+            className="bg-primary text-white rounded-md h-9 px-4 inline-flex items-center hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            Start New Review
           </Link>
-          <Link href="/history" legacyBehavior>
-            <a>
-            <Button variant="secondary">View Analysis History</Button>
-            </a>
+          <Link
+            href="/history"
+            className="bg-white text-primary border border-primary/20 rounded-md h-9 px-4 inline-flex items-center hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          >
+            View History
           </Link>
     </div>
       </div>
+    </Layout>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

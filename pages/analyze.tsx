@@ -32,8 +32,12 @@ export default function AnalyzePage() {
 
       const data = await response.json();
       setResult(data.data);
-    } catch (err: any) {
+    } catch (err) {
+      if (err instanceof Error) {
       setError(err.message);
+      } else {
+        setError('An unknown error occurred.');
+    }
     } finally {
       setIsLoading(false);
     }
@@ -79,3 +83,4 @@ export default function AnalyzePage() {
     </div>
   );
 }
+

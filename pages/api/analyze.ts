@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+interface AnalysisResponse {
+  sentiment: 'positive' | 'negative' | 'neutral';
+  confidence: number;
+  keywords: string[];
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -37,7 +43,7 @@ Text:
     const raw = result.response.text().trim();
     const cleaned = raw.replace(/```json|```/g, '').trim();
 
-    let parsed: any;
+    let parsed: AnalysisResponse;
     try {
       parsed = JSON.parse(cleaned);
     } catch {
@@ -45,7 +51,8 @@ Text:
     }
 
     return res.status(200).json({ ok: true, data: parsed });
-  } catch (e: any) {
-    return res.status(500).json({ error: e?.message ?? 'Model call failed' });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Model call failed';
+    return res.status(500).json({ error: message });
   }
 }

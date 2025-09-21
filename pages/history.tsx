@@ -1,101 +1,87 @@
-import { useState, useEffect } from 'react';
+import Layout from '@/components/Layout';
+import { supabase } from '@/lib/supabaseClient';
+import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
-import { supabase } from '../lib/supabaseClient';
-import { Card } from '../components/ui/Card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
-import { Toast } from '../components/ui/Toast';
-import { Button } from '../components/ui/Button';
+import type { AnalysisIssue } from '@/lib/review';
 
-// (Keep your existing AnalysisRecord type)
-type AnalysisRecord = {
+type HistoryItem = {
   id: string;
   created_at: string;
   user_input: string;
   ai_result: {
-    fileName: string;
+    issues: AnalysisIssue[];
     summary: {
       issueCount: number;
     };
   };
 };
 
-export default function HistoryPage() {
-  const [records, setRecords] = useState<AnalysisRecord[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+type HistoryProps = {
+  requests: HistoryItem[];
+};
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      setIsLoading(true);
-      setError(null);
-      const { data, error } = await supabase
-        .from('demo_requests')
-        .select('id, created_at, user_input, ai_result')
-        .order('created_at', { ascending: false })
-        .limit(20);
-      if (error) {
-        setError(error.message);
-      } else {
-        setRecords(data as any);
-      }
-      setIsLoading(false);
-    };
-    fetchHistory();
-  }, []);
-
+export default function History({ requests }: HistoryProps) {
   return (
-    <div>
-      {error && <Toast message={error} variant="danger" onClose={() => setError(null)} />}
-      <Card>
-        <h1 className="text-2xl font-bold mb-6 text-ink-primary">Analysis History</h1>
-
-        {isLoading && <p className="text-ink-secondary">Loading history...</p>}
-        {!isLoading && error && (
-          <div className="text-center py-8">
-            <p className="text-danger mb-4">Failed to load analysis history.</p>
-            <p className="text-ink-secondary">{error}</p>
-          </div>
-        )}
-
-        {!isLoading && !error && records.length === 0 && (
-
-          <div className="text-center py-8">
-            <p className="text-ink-secondary mb-4">No analysis history found.</p>
-            <Link href="/review" legacyBehavior>
-              <a><Button variant="primary">Start a New Review</Button></a>
-            </Link>
-          </div>
-        )}
-
-        {!isLoading && !error && records.length > 0 && (
-          <Table>
-            <TableHead>
-              <TableHeader>Created At</TableHeader>
-              <TableHeader>File Name</TableHeader>
-              <TableHeader>Issue Count</TableHeader>
-              <TableHeader><span className="sr-only">View</span></TableHeader>
-            </TableHead>
-            <TableBody>
-              {records.map((record) => (
-                <TableRow key={record.id}>
-                  <TableCell>{new Date(record.created_at).toLocaleString()}</TableCell>
-                  <TableCell className="font-mono">
-                    {record.ai_result?.fileName || record.user_input}
-                  </TableCell>
-                  <TableCell>{record.ai_result?.summary?.issueCount ?? 'N/A'}</TableCell>
-                  <TableCell className="text-right">
-                    <Link href={`/history/${record.id}`} legacyBehavior>
-
-                      <a><Button variant="ghost">View Details</Button></a>
+    <Layout title="History | PDF QA Checker">
+      <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+        <h1 className="text-2xl font-bold mb-6">Analysis History</h1>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-subtle sticky top-0">
+              <tr>
+                <th className="p-3 text-left font-medium">Date</th>
+                <th className="p-3 text-left font-medium">File Name</th>
+                <th className="p-3 text-left font-medium">Issues Found</th>
+                <th className="p-3 text-left font-medium"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((req, i) => (
+                <tr
+                  key={req.id}
+                  className={i % 2 === 0 ? 'bg-white' : 'bg-subtle'}
+                >
+                  <td className="p-3">
+                    {new Date(req.created_at).toLocaleString()}
+                  </td>
+                  <td className="p-3 font-medium">{req.user_input}</td>
+                  <td className="p-3">
+                    {req.ai_result?.summary?.issueCount ?? 0}
+                  </td>
+                  <td className="p-3 text-right">
+                    <Link
+                      href={`/history/${req.id}`}
+                      className="text-primary hover:underline font-medium"
+                    >
+                      View Details
                     </Link>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
-        )}
-      </Card>
-    </div>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Layout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data, error } = await supabase
+    .from('demo_requests')
+    .select('id, created_at, user_input, ai_result')
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error('Error fetching history:', error);
+  }
+
+  return {
+    props: {
+      requests: data ?? [],
+    },
+  };
+};
+
 

@@ -1,138 +1,156 @@
-import { useState, FormEvent } from 'react';
-import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
-import { Toast } from '../components/ui/Toast';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/Table';
-import { Badge } from '../components/ui/Badge';
+import Layout from '@/components/Layout';
+import { useState } from 'react';
+import type { AnalysisResult, AnalysisIssue } from '@/lib/review';
+import { FileUp, Loader2, CheckCircle, AlertTriangle } from 'lucide-react';
 
-// (Keep your existing type definitions for Issue and AnalysisResult)
-type Issue = {
-  page: number;
-  type: string;
-  message: string;
-  original: string;
-  suggestion: string;
-  locationHint: string;
-};
-
-type AnalysisResult = {
-  fileName: string;
-
-  issues: Issue[];
-  summary: {
-    issueCount: number;
-    pagesAffected: number[];
-  };
-};
-
-export default function ReviewPage() {
+export default function Review() {
   const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
+    setFile(e.target.files?.[0] || null);
+    setResult(null);
+    setError(null);
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) {
-      setError('Please select a file to upload.');
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
+    if (!file) return;
+
+    setUploading(true);
     setResult(null);
+    setError(null);
+
     const formData = new FormData();
     formData.append('file', file);
-    try {
-      const response = await fetch('/api/review', { method: 'POST', body: formData });
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.error || 'Something went wrong');
-      }
-      setResult(responseData.data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const getBadgeVariant = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'typo': return 'warning';
-      case 'punctuation': return 'warning';
-      case 'formatting': return 'danger';
-      case 'spacing': return 'danger';
-      case 'reference': return 'warning';
-      case 'numbering': return 'warning';
-      default: return 'default';
+    try {
+      const res = await fetch('/api/review', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Something went wrong');
+      }
+      setResult(data.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      {error && <Toast message={error} variant="danger" onClose={() => setError(null)} />}
-      <Card>
-        <h1 className="text-2xl font-bold mb-2 text-ink-primary">New PDF Review</h1>
-        <p className="text-ink-secondary mb-6">Upload a PDF to get an AI-powered analysis of typos, formatting issues, and more.</p>
+    <Layout title="New Review | PDF QA Checker">
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Upload Form */}
+        <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+          <h2 className="text-2xl font-bold mb-6">Upload your PDF</h2>
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center space-x-4">
-            <label className="flex-grow">
-              <span className="sr-only">Choose a file</span>
-              <input
-              type="file"
-              accept="application/pdf"
-              onChange={handleFileChange}
-                className="block w-full text-base text-ink-secondary file:mr-4 file:py-2 file:px-4 file:rounded-acl file:border file:border-frame-border file:text-base file:font-semibold file:bg-frame-bg-alt file:text-primary hover:file:bg-gray-100 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-              disabled={isLoading}
-            />
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-subtle/40">
+              <FileUp className="mx-auto h-12 w-12 text-gray-400" />
+              <label
+                htmlFor="file-upload"
+                className="mt-4 block font-medium text-primary cursor-pointer hover:underline"
+              >
+                {file ? 'Change file' : 'Choose a file'}
             </label>
-            <Button type="submit" isLoading={isLoading} disabled={!file || isLoading}>
-              Analyze PDF
-            </Button>
-          </div>
-        </form>
-      </Card>
-
-      {result && (
-        <Card className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Analysis for: <span className="font-mono">{result.fileName}</span></h2>
-          <p className="mb-4 text-ink-secondary">Total issues found: <strong>{result.summary.issueCount}</strong></p>
-          {result.issues.length > 0 ? (
-            <Table>
-              <TableHead>
-                <TableHeader>Page</TableHeader>
-                <TableHeader>Type</TableHeader>
-                <TableHeader>Message</TableHeader>
-                <TableHeader>Original</TableHeader>
-                <TableHeader>Suggestion</TableHeader>
-                <TableHeader>Location</TableHeader>
-              </TableHead>
-              <TableBody>
-                {result.issues.map((issue, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{issue.page}</TableCell>
-                    <TableCell><Badge variant={getBadgeVariant(issue.type)}>{issue.type}</Badge></TableCell>
-                    <TableCell>{issue.message}</TableCell>
-                    <TableCell><span className="font-mono text-danger">{issue.original}</span></TableCell>
-                    <TableCell><span className="font-mono text-success">{issue.suggestion}</span></TableCell>
-                    <TableCell className="text-ink-secondary">{issue.locationHint}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="mt-4 p-4 bg-success/20 text-success rounded-acl">
-              No issues detected.
+              <input
+                id="file-upload"
+                name="file-upload"
+                type="file"
+                className="sr-only"
+                onChange={handleFileChange}
+                accept=".pdf"
+                disabled={uploading}
+              />
+              <p className="mt-1 text-sm text-gray-500">
+                {file ? file.name : 'PDF up to 10MB'}
+              </p>
             </div>
-          )}
-        </Card>
-      )}
+            <button
+              type="submit"
+              disabled={!file || uploading}
+              className="mt-6 w-full bg-primary text-white rounded-md h-9 px-4 hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {uploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {uploading ? 'Analyzing...' : 'Analyze Document'}
+            </button>
+          </form>
+            </div>
+
+        {/* Results */}
+        <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+          <h2 className="text-2xl font-bold mb-6">Results</h2>
+          <div className="h-96 overflow-y-auto pr-2 -mr-2">
+            {error && (
+              <div className="flex items-center gap-3 bg-red-50 text-red-700 p-4 rounded-md">
+                <AlertTriangle className="h-5 w-5" />
+                <span>{error}</span>
+    </div>
+            )}
+            {result && (
+              <div>
+                {result.issues.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                    <CheckCircle className="h-12 w-12 text-green-500" />
+                    <p className="mt-4 font-medium text-lg">No issues found!</p>
+                    <p className="text-sm">
+                      This document looks great.
+                    </p>
+                  </div>
+                ) : (
+                  <IssuesTable issues={result.issues} />
+                )}
+              </div>
+            )}
+            {!result && !error && !uploading && (
+              <div className="text-center text-gray-500 h-full flex flex-col justify-center">
+                <p>Analysis results will appear here.</p>
+              </div>
+            )}
+            {uploading && (
+              <div className="text-center text-gray-500 h-full flex flex-col justify-center items-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="mt-4">Analyzing your document...</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+}
+
+
+function IssuesTable({ issues }: { issues: AnalysisIssue[] }) {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead className="bg-subtle sticky top-0">
+          <tr>
+            <th className="p-3 text-left font-medium">Page</th>
+            <th className="p-3 text-left font-medium">Type</th>
+            <th className="p-3 text-left font-medium">Message</th>
+            <th className="p-3 text-left font-medium">Suggestion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {issues.map((issue, i) => (
+            <tr key={i} className="border-b border-gray-200">
+              <td className="p-3">{issue.page}</td>
+              <td className="p-3 capitalize">{issue.type}</td>
+              <td className="p-3">{issue.message}</td>
+              <td className="p-3 font-mono bg-green-50 text-green-800 rounded">
+                <code>{issue.suggestion}</code>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
