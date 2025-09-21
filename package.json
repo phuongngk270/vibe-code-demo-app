@@ -3,34 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
-    "@supabase/supabase-js": "^2.57.4",
-    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
-    "@types/formidable": "^3.4.5",
-    "autoprefixer": "^10.4.21",
-    "formidable": "^3.5.4",
+    "@google/generative-ai": "^0.21.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "formidable": "^3.5.1",
     "lucide-react": "^0.544.0",
-    "next": "15.5.3",
+    "next": "14.2.5",
     "pdf-parse": "^1.1.1",
-    "postcss": "^8.5.6",
-    "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4.1.13",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/formidable": "^3.4.5",
+    "@types/node": "^20.12.12",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.5.4"
   }
 }

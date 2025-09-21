@@ -1,45 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
-  html {
-    font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';
-  }
-  body {
-    @apply bg-[#F5F7FB] text-[#101828] antialiased;
-  }
-  a {
-    @apply text-[#2A7DE1] hover:underline;
-  }
+html { font-family: var(--font-inter, ui-sans-serif, system-ui); }
+  body { @apply bg-[#F5F7FB] text-[#101828] antialiased; }
+  a { @apply text-brand hover:underline; }
+}
+@layer components {
+  .container-xl { @apply max-w-6xl mx-auto px-6; }
+  .btn { @apply inline-flex items-center px-5 py-3 rounded-full font-semibold transition; }
+  .btn-primary { @apply bg-brand text-white hover:bg-brandDark; }
+  .btn-outline { @apply border border-brand text-brand hover:bg-[#E6F0FB]; }
+  .muted { @apply text-brandAccent; }
 }
 
-@layer components {
-  .container-xl {
-    @apply max-w-6xl mx-auto px-6;
-  }
-  .btn {
-    @apply inline-flex items-center justify-center h-10 px-5 rounded-pill font-medium transition;
-  }
-  .btn-primary {
-    @apply bg-primary text-white hover:bg-primaryDark shadow-sm;
-  }
-  .btn-outline {
-    @apply border border-primary text-primary bg-white hover:bg-primarySoft;
-  }
-  .card {
-    @apply bg-surface rounded-lgx shadow-soft border border-transparent;
-  }
-  .table {
-    @apply w-full text-sm;
-  }
-  .table thead th {
-    @apply text-muted font-semibold text-xs uppercase tracking-wide bg-[#F9FAFB] py-3 px-4 border-b border-border;
-  }
-  .table tbody td {
-    @apply py-3 px-4 border-b border-border align-top;
-  }
-  .table tbody tr:hover {
-    @apply bg-[#F7FAFF];
-  }
-}
+
