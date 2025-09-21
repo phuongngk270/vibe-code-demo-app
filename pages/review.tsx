@@ -47,10 +47,10 @@ export default function Review() {
     <Layout title="New Review | PDF QA Checker">
       <div className="grid md:grid-cols-2 gap-8">
         {/* Upload Form */}
-        <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+        <div className="card p-6 md:p-8">
           <h2 className="text-2xl font-bold mb-6">Upload your PDF</h2>
         <form onSubmit={handleSubmit}>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-subtle/40">
+            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center bg-bg">
               <FileUp className="mx-auto h-12 w-12 text-gray-400" />
               <label
                 htmlFor="file-upload"
@@ -67,14 +67,14 @@ export default function Review() {
                 accept=".pdf"
                 disabled={uploading}
               />
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-muted">
                 {file ? file.name : 'PDF up to 10MB'}
               </p>
             </div>
             <button
               type="submit"
               disabled={!file || uploading}
-              className="mt-6 w-full bg-primary text-white rounded-md h-9 px-4 hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="mt-6 w-full btn btn-primary"
             >
               {uploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {uploading ? 'Analyzing...' : 'Analyze Document'}
@@ -83,7 +83,7 @@ export default function Review() {
             </div>
 
         {/* Results */}
-        <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+        <div className="card p-6 md:p-8">
           <h2 className="text-2xl font-bold mb-6">Results</h2>
           <div className="h-96 overflow-y-auto pr-2 -mr-2">
             {error && (
@@ -95,12 +95,10 @@ export default function Review() {
             {result && (
               <div>
                 {result.issues.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                  <div className="flex flex-col items-center justify-center h-full text-center text-muted">
                     <CheckCircle className="h-12 w-12 text-green-500" />
                     <p className="mt-4 font-medium text-lg">No issues found!</p>
-                    <p className="text-sm">
-                      This document looks great.
-                    </p>
+                    <p className="text-sm">This document looks great.</p>
                   </div>
                 ) : (
                   <IssuesTable issues={result.issues} />
@@ -108,12 +106,12 @@ export default function Review() {
               </div>
             )}
             {!result && !error && !uploading && (
-              <div className="text-center text-gray-500 h-full flex flex-col justify-center">
+              <div className="text-center text-muted h-full flex flex-col justify-center">
                 <p>Analysis results will appear here.</p>
               </div>
             )}
             {uploading && (
-              <div className="text-center text-gray-500 h-full flex flex-col justify-center items-center">
+              <div className="text-center text-muted h-full flex flex-col justify-center items-center">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="mt-4">Analyzing your document...</p>
               </div>
@@ -125,12 +123,11 @@ export default function Review() {
   );
 }
 
-
 function IssuesTable({ issues }: { issues: AnalysisIssue[] }) {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full text-sm">
-        <thead className="bg-subtle sticky top-0">
+      <table className="table">
+        <thead>
           <tr>
             <th className="p-3 text-left font-medium">Page</th>
             <th className="p-3 text-left font-medium">Type</th>
@@ -140,12 +137,14 @@ function IssuesTable({ issues }: { issues: AnalysisIssue[] }) {
         </thead>
         <tbody>
           {issues.map((issue, i) => (
-            <tr key={i} className="border-b border-gray-200">
+            <tr key={i}>
               <td className="p-3">{issue.page}</td>
               <td className="p-3 capitalize">{issue.type}</td>
               <td className="p-3">{issue.message}</td>
-              <td className="p-3 font-mono bg-green-50 text-green-800 rounded">
-                <code>{issue.suggestion}</code>
+              <td className="p-3">
+                <code className="p-1 font-mono bg-primarySoft text-primaryDark rounded">
+                  {issue.suggestion}
+                </code>
               </td>
             </tr>
           ))}

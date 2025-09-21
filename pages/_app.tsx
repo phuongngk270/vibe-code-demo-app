@@ -1,17 +1,12 @@
-import '@/styles/acl.css';
-import '@/styles/globals.css';
+// pages/_app.tsx
 import type { AppProps } from 'next/app';
-import { AppShell } from '@/components/ui/AppShell';
-import { Inter } from 'next/font/google';
+import '../styles/globals.css';
+import Layout from '../components/Layout';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-export default function App({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${inter.variable} font-sans`}>
-    <AppShell>
+    <Layout>
       <Component {...pageProps} />
-    </AppShell>
-    </main>
+    </Layout>
   );
 }
-

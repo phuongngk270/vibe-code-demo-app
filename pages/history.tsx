@@ -23,44 +23,48 @@ type HistoryProps = {
 export default function History({ requests }: HistoryProps) {
   return (
     <Layout title="History | PDF QA Checker">
-      <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+      <div className="card p-6 md:p-8">
         <h1 className="text-2xl font-bold mb-6">Analysis History</h1>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-subtle sticky top-0">
-              <tr>
-                <th className="p-3 text-left font-medium">Date</th>
-                <th className="p-3 text-left font-medium">File Name</th>
-                <th className="p-3 text-left font-medium">Issues Found</th>
-                <th className="p-3 text-left font-medium"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((req, i) => (
-                <tr
-                  key={req.id}
-                  className={i % 2 === 0 ? 'bg-white' : 'bg-subtle'}
-                >
-                  <td className="p-3">
-                    {new Date(req.created_at).toLocaleString()}
-                  </td>
-                  <td className="p-3 font-medium">{req.user_input}</td>
-                  <td className="p-3">
-                    {req.ai_result?.summary?.issueCount ?? 0}
-                  </td>
-                  <td className="p-3 text-right">
-                    <Link
-                      href={`/history/${req.id}`}
-                      className="text-primary hover:underline font-medium"
-                    >
-                      View Details
-                    </Link>
-                  </td>
+        {requests.length === 0 ? (
+          <div className="text-center text-muted py-12">
+            <p>No history found.</p>
+            <p className="mt-2">
+              <Link href="/review" className="btn btn-primary">
+                Start a new review
+              </Link>
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="p-3 text-left font-medium">Date</th>
+                  <th className="p-3 text-left font-medium">File Name</th>
+                  <th className="p-3 text-left font-medium">Issues Found</th>
+                  <th className="p-3 text-left font-medium"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {requests.map((req) => (
+                  <tr key={req.id}>
+                    <td className="p-3">{new Date(req.created_at).toLocaleString()}</td>
+                    <td className="p-3 font-medium">{req.user_input}</td>
+                    <td className="p-3">{req.ai_result?.summary?.issueCount ?? 0}</td>
+                    <td className="p-3 text-right">
+                      <Link
+                        href={`/history/${req.id}`}
+                        className="text-primary hover:underline font-medium"
+                      >
+                        View Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </Layout>
   );
@@ -83,5 +87,3 @@ export const getServerSideProps: GetServerSideProps = async () => {
     },
   };
 };
-
-
