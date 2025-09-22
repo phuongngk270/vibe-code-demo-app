@@ -3,15 +3,15 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <Layout>
+    <Layout title="Home">
       <div className="text-center py-20">
-        <h1 className="text-5xl font-bold">
+        <h1 className="text-5xl font-bold tracking-tight">
           Catch errors before they cost you.
         </h1>
         <p className="mt-4 text-lg text-muted max-w-2xl mx-auto">
           Our AI-powered tool scans your PDF documents for typos, formatting
-          inconsistencies, and other common issues, ensuring professional quality
-          every time.
+          inconsistencies, and other common issues, ensuring professional
+          quality every time.
         </p>
         <div className="mt-10 flex justify-center gap-4">
           <Link href="/review" className="btn btn-primary">
@@ -25,7 +25,3 @@ export default function Home() {
     </Layout>
   );
 }
-
-
-
-

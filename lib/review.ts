@@ -9,7 +9,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export type AnalysisIssue = {
   page: number;
-  type: 'typo' | 'spacing' | 'punctuation' | 'capitalization' | 'alignment' | 'font' | 'formatting' | 'other';
+  type: 'typo' | 'spacing' | 'punctuation' | 'capitalization' | 'alignment' | 'font' | 'formatting' | 'cross_reference' | 'other';
   message: string;
   original: string;
   suggestion: string;
@@ -55,23 +55,11 @@ export const callGemini = async (base64File: string): Promise<AnalysisResult> =>
 
   const prompt = `
 Act as a PDF QA checker for a data science team.
-Detect typos, and formatting issues (spacing, punctuation, capitalization, alignment, font inconsistencies, numbering/bullets).
-Return STRICT JSON ONLY (no prose, no code fences) matching this schema:
-{
-  "fileName": "string",
-  "issues": [
-    {
-      "page": 1,
-      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|other",
-      "message": "string",
-      "original": "string",
-      "suggestion": "string",
-      "locationHint": "paragraph/line context or short snippet"
-    }
-  ],
-  "summary": { "issueCount": 0, "pagesAffected": [1, 2] }
-}
-`;
+First, extract all section headers (e.g., "Section 1", "Section I", "Appendix A").
+Then, for each cross-reference found in the text (e.g., "see Section 1"), check if the referenced section header actually exists.
+If a cross-reference points to a non-existent section, emit an issue object with the type 'cross_reference'.
+Also, detect standard typos and formatting issues (spacing, punctuation, capitalization, alignment, font inconsistencies, numbering/bullets).
+Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "fileName": "string",\n  "issues": [\n    {\n      "page": 1,\n      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|cross_reference|other",\n      "message": "string",\n      "original": "string",\n      "suggestion": "string",\n      "locationHint": "paragraph/line context or short snippet"\n    }\n  ],\n  "summary": { "issueCount": 0, "pagesAffected": [1, 2] }\n}\n`;
 
   try {
     const modelPromise = model.generateContent([
@@ -100,27 +88,27 @@ Return STRICT JSON ONLY (no prose, no code fences) matching this schema:
  * @returns A normalized data object.
  */
 export const normalizeData = (data: Partial<AnalysisResult>, fileName: string): AnalysisResult => {
-    data.fileName = fileName;
-    if (!Array.isArray(data.issues)) {
-        data.issues = [];
-    }
+  data.fileName = fileName;
+  if (!Array.isArray(data.issues)) {
+    data.issues = [];
+  }
 
-    const allowedTypes: AnalysisIssue['type'][] = ['typo', 'spacing', 'punctuation', 'capitalization', 'alignment', 'font', 'formatting', 'other'];
-    data.issues = data.issues.map((issue: Partial<AnalysisIssue>): AnalysisIssue => ({
-        page: Math.max(1, parseInt(String(issue.page), 10) || 1),
-        type: allowedTypes.includes(issue.type as AnalysisIssue['type']) ? (issue.type as AnalysisIssue['type']) : 'other',
-        message: String(issue.message || ''),
-        original: String(issue.original || ''),
-        suggestion: String(issue.suggestion || ''),
-        locationHint: String(issue.locationHint || ''),
-    }));
+  const allowedTypes: AnalysisIssue['type'][] = ['typo', 'spacing', 'punctuation', 'capitalization', 'alignment', 'font', 'formatting', 'cross_reference', 'other'];
+  data.issues = data.issues.map((issue: Partial<AnalysisIssue>): AnalysisIssue => ({
+    page: Math.max(1, parseInt(String(issue.page), 10) || 1),
+    type: allowedTypes.includes(issue.type as AnalysisIssue['type']) ? (issue.type as AnalysisIssue['type']) : 'other',
+    message: String(issue.message || ''),
+    original: String(issue.original || ''),
+    suggestion: String(issue.suggestion || ''),
+    locationHint: String(issue.locationHint || ''),
+  }));
 
-    if (!data.summary) {
-        data.summary = { issueCount: 0, pagesAffected: [] };
-    }
-    data.summary.issueCount = data.issues.length;
-    data.summary.pagesAffected = [...new Set(data.issues.map((i: AnalysisIssue) => i.page))];
-    return data as AnalysisResult;
+  if (!data.summary) {
+    data.summary = { issueCount: 0, pagesAffected: [] };
+  }
+  data.summary.issueCount = data.issues.length;
+  data.summary.pagesAffected = [...new Set(data.issues.map((i: AnalysisIssue) => i.page))];
+  return data as AnalysisResult;
 };
 
 /**
@@ -129,28 +117,28 @@ export const normalizeData = (data: Partial<AnalysisResult>, fileName: string): 
  * @returns An object containing the new record's ID or an error.
  */
 export const saveToSupabase = async (normalizedData: AnalysisResult) => {
-    const { data: dbData, error: dbError } = await supabase
-        .from('demo_requests')
-        .insert({ user_input: normalizedData.fileName, ai_result: normalizedData })
-        .select('id')
-        .single();
+  const { data, error } = await supabase
+    .from('demo_requests')
+    .insert({ user_input: normalizedData.fileName, ai_result: normalizedData })
+    .select('id')
+    .single();
 
-    if (dbError) {
-        return { error: dbError };
-    }
-    return { id: dbData.id };
+  if (error) {
+    return { error: error };
+  }
+  return { id: data?.id };
 };
 
 export const saveToSupabaseServer = async (normalizedData: AnalysisResult) => {
-    const supabaseServer = createServerSupabase();
-    const { data: dbData, error: dbError } = await supabaseServer
-        .from('demo_requests')
-        .insert({ user_input: normalizedData.fileName, ai_result: normalizedData })
-        .select('id')
-        .single();
+  const supabaseServer = createServerSupabase();
+  const { data, error } = await supabaseServer
+    .from('demo_requests')
+    .insert({ user_input: normalizedData.fileName, ai_result: normalizedData })
+    .select('id')
+    .single();
 
-    if (dbError) {
-        return { error: dbError };
-    }
-    return { id: dbData.id };
+  if (error) {
+    return { error:error };
+  }
+  return { id: data?.id };
 };
