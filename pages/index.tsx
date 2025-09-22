@@ -1,9 +1,7 @@
-import Layout from '@/components/Layout';
 import Link from 'next/link';
 
 export default function Home() {
   return (
-    <Layout title="Home">
       <div className="text-center py-20">
         <h1 className="text-5xl font-bold tracking-tight">
           Catch errors before they cost you.
@@ -22,6 +20,5 @@ export default function Home() {
           </Link>
     </div>
       </div>
-    </Layout>
   );
 }

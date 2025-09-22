@@ -1,4 +1,3 @@
-import Layout from '@/components/Layout';
 import { supabase } from '@/lib/supabaseClient';
 import type { AnalysisIssue } from '@/lib/review';
 import type { GetServerSideProps } from 'next';
@@ -17,7 +16,6 @@ type DetailsProps = {
 
 export default function Details({ request }: DetailsProps) {
   return (
-    <Layout title={`Details for ${request.user_input}`}>
       <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
         <h1 className="text-2xl font-bold">
           Analysis for{' '}
@@ -35,7 +33,6 @@ export default function Details({ request }: DetailsProps) {
           )}
         </div>
       </div>
-    </Layout>
   );
 }
 

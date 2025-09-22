@@ -1,4 +1,3 @@
-import Layout from '@/components/Layout';
 import Link from 'next/link';
 import React, { useState, FormEvent } from 'react';
 
@@ -67,7 +66,6 @@ export default function ReviewPage() {
   };
 
   return (
-    <Layout title="New PDF Review">
       <div className="container-xl py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">New PDF Review</h1>
@@ -139,7 +137,6 @@ export default function ReviewPage() {
           </div>
         )}
       </div>
-    </Layout>
   );
 }
 

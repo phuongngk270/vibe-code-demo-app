@@ -1,4 +1,3 @@
-import Layout from '@/components/Layout';
 import { supabase } from '@/lib/supabaseClient';
 import type { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -22,7 +21,6 @@ type HistoryProps = {
 
 export default function History({ requests }: HistoryProps) {
   return (
-    <Layout title="History | PDF QA Checker">
       <div className="card p-6 md:p-8">
         <h1 className="text-2xl font-bold mb-6">Analysis History</h1>
         {requests.length === 0 ? (
@@ -66,7 +64,6 @@ export default function History({ requests }: HistoryProps) {
           </div>
         )}
       </div>
-    </Layout>
   );
 }
 
