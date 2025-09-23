@@ -1,4 +1,4 @@
-# Vibe Code Demo App
+# Anduin Sub-doc Reviewer
 
 This application is a sub-document reviewer that leverages AI to analyze PDF documents for various issues (typos, formatting, capitalization, cross-references) and generates a review email based on the findings.
 
