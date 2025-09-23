@@ -74,7 +74,16 @@ Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "
 
     const result = await Promise.race([modelPromise, timeoutPromise]);
     const raw = result.response.text().trim();
-    const cleaned = raw.replace(/```json|```/g, '').trim();
+    console.log('Raw response from model (before cleaning):', raw); // Log the entire raw response
+    const jsonMatch = raw.match(/```json\n([\s\S]*?)\n```/);
+    let cleaned = raw;
+    if (jsonMatch && jsonMatch[1]) {
+      cleaned = jsonMatch[1].trim();
+    } else {
+      // Fallback if no ```json``` block is found, try to clean common markdown fences
+      cleaned = raw.replace(/```json|```/g, '').trim();
+    }
+
     try {
       const parsed = JSON.parse(cleaned) as AnalysisResult;
       return parsed;

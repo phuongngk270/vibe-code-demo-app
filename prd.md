@@ -1,39 +1,112 @@
-Problem
+# Product Requirements Document (PRD) - Sub-Document Reviewer App
 
-What problem are you solving?
-Detect typos and formatting issues in the PDF documents
+## 1. Introduction
 
-Target User
+This document outlines the requirements for the Sub-Document Reviewer App, a tool designed to assist legal-ops teams in efficiently reviewing sub-documents (PDFs) for formatting inconsistencies, typos, and other critical issues before digitization. The application leverages AI to automate the detection process and streamline the generation of review feedback.
 
-Who is this for?
-DS team member who reviews the sub-docs and detects formatting issues before the form digitization
+## 2. Problem Statement
 
-Core Feature
+Legal-ops teams spend significant time manually reviewing sub-documents for errors, leading to a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
 
-What’s the single feature your MVP must deliver?
-Scan through the PDF, detect all typos and weird formats and produce a table listing all errors with its location in the PDF.
+## 3. Target Users
 
-AI Integration
+The primary target users are Data Science (DS) team members and legal-ops professionals responsible for reviewing sub-documents and ensuring their quality before further processing or digitization.
 
-Where does AI fit in?
-Gemini 1.5 Flash will process the PDF and flexibly detect format errors and typos as per the predefined instructions and examples.
+## 4. Goals
 
-Data Model (Supabase)
-	•	demo_requests
-	•	id: uuid
-	•	created_at: timestamptz
-	•	user_input: text
-	•	ai_result: jsonb
+*   To reduce the manual effort and time spent on sub-document review.
+*   To improve the accuracy and consistency of issue detection.
+*   To provide a streamlined process for generating review feedback (emails).
+*   To enhance the overall efficiency of the document digitization workflow.
 
-Success Criteria
-	•	API returns strict JSON with a list of detected issues from the uploaded PDF.
-	•	Each request/response is stored in Supabase (demo_requests).
-	•	Live deployment on Vercel with at least 2 pages:
-	•	/review (upload PDF → see issues table)
-	•	/history (list past analyses; link to view results)
-	•	API returns strict JSON with a list of detected issues from the uploaded PDF.
-	•	Each request/response is stored in Supabase (demo_requests).
-	•	Live deployment on Vercel with at least 2 pages:
-	•	/review (upload PDF → see issues table)
-	•	/history (list past analyses; link to view results)
+## 5. Features
 
+### 5.1 Core Functionality
+
+*   **PDF Upload:** Users can upload PDF documents for analysis.
+*   **AI-Powered Issue Detection:** The application will scan uploaded PDFs to identify:
+    *   Typos
+    *   Spacing inconsistencies
+    *   Punctuation errors
+    *   Capitalization errors
+    *   Alignment issues
+    *   Font inconsistencies
+    *   General formatting problems (e.g., inconsistent numbering/bullets)
+    *   Broken cross-references (e.g., "see Section X" where Section X does not exist)
+*   **Issue Reporting:** A table displaying all detected issues, including:
+    *   Page number
+    *   Type of issue
+    *   Detailed message
+    *   Original text snippet
+    *   Suggested correction (if applicable)
+    *   Location hint (e.g., "Section 1", "Paragraph starting with...")
+*   **Screenshot Generation:** For each identified issue, a screenshot of the relevant section of the PDF page will be generated and displayed.
+*   **AI-Generated Review Email:** Based on the detected issues, the application will draft a customer-friendly email that:
+    *   Summarizes the findings.
+    *   Proposes solutions for each issue.
+    *   Cites exact section names and page numbers.
+    *   Maintains a polite, direct, and time-bounded tone.
+
+### 5.2 User Interface (UI)
+
+*   **Review Page (`/review`):**
+    *   PDF upload interface.
+    *   Display of the issues table.
+    *   Display of generated screenshots.
+    *   Interface to generate and preview the review email.
+*   **History Page (`/history`):**
+    *   List of past document analyses.
+    *   Ability to view detailed results of previous analyses.
+
+## 6. User Flow
+
+1.  **User logs in** (via Clerk authentication).
+2.  **User navigates to the `/review` page.**
+3.  **User uploads a PDF document.**
+4.  **The application processes the PDF:**
+    *   Extracts text and metadata.
+    *   Sends relevant data to the Gemini API for issue detection.
+    *   Generates screenshots for identified issues.
+5.  **The application displays the detected issues** in a table format on the `/review` page.
+6.  **User reviews the issues and generated screenshots.**
+7.  **User initiates the email generation process.**
+8.  **The application generates a draft review email** based on the issues.
+9.  **User previews the email** and can copy it for sending.
+10. **All analysis results are saved to the history** and accessible via the `/history` page.
+
+## 7. Technical Design
+
+### 7.1 Architecture
+
+The application is built using the Next.js framework, providing a full-stack solution with API routes for backend logic and React for the frontend.
+
+### 7.2 Key Integrations
+
+*   **Next.js:** Frontend and API routes.
+*   **Clerk:** User authentication and management.
+*   **Supabase:**
+    *   **Database:** Stores analysis results (`demo_requests` table).
+    *   **Storage:** Stores generated screenshots.
+*   **Google Gemini API:** AI model for PDF analysis and issue detection.
+*   **`pdfjs-dist`:** PDF rendering and manipulation for screenshot generation.
+*   **`formidable`:** Handles multipart/form-data for file uploads.
+*   **`canvas`:** Used for rendering PDF pages to images for screenshots.
+
+### 7.3 Data Model (Supabase)
+
+*   **`demo_requests` table:**
+    *   `id`: `uuid` (Primary Key)
+    *   `created_at`: `timestamptz`
+    *   `user_input`: `text` (e.g., file name of the uploaded PDF)
+    *   `ai_result`: `jsonb` (Stores the detailed `AnalysisResult` from the AI, including issues and summary)
+
+## 8. Success Criteria
+
+*   The API consistently returns strict JSON with a list of detected issues from uploaded PDFs.
+*   Each request/response is successfully stored in Supabase (`demo_requests` table).
+*   The application is deployed live on Vercel with functional `/review` and `/history` pages.
+*   The `/review` page successfully uploads PDFs, displays issues, and generates screenshots.
+*   The `/history` page accurately lists past analyses and allows viewing of detailed results.
+*   AI-generated emails are coherent, accurate, and follow the specified format.
+*   No sensitive keys or secrets are exposed in the repository.
+*   `README.md` provides clear and comprehensive setup instructions.

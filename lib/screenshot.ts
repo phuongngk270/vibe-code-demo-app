@@ -22,7 +22,7 @@ export async function generateScreenshot({
 }: ScreenshotOptions): Promise<string | null> {
   try {
     const pdfjs = await import('pdfjs-dist');
-    pdfjs.GlobalWorkerOptions.workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.js');
+    pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
 
     // Load PDF document
     const pdfDocument = await pdfjs.getDocument({
