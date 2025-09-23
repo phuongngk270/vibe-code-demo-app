@@ -44,7 +44,52 @@ The output should be a JSON object with the following structure:
 }
 `
 
-// ... (interfaces Customer, Fund, SubDoc, Issue, Typo, EmailGenerationInputs, GeneratedEmail, EmailMetadata remain the same)
+export interface Customer {
+  name: string;
+  timezone: string;
+}
+
+export interface Fund {
+  name: string;
+}
+
+export interface SubDoc {
+  name: string;
+}
+
+export interface Issue {
+  category: string;
+  sectionTitle: string;
+  pageRef: string;
+  needsUpdatedPDF: boolean;
+}
+
+export interface Typo {
+  pageRef: string;
+  excerpt: string;
+  suggestedFix: string;
+}
+
+export interface EmailGenerationInputs {
+  customer: Customer;
+  funds: Fund[];
+  issues: Issue[];
+  typos: Typo[];
+  expectedDate: string;
+  firstTestingDate?: string;
+}
+
+export interface GeneratedEmail {
+  subject: string;
+  bodyHtml: string;
+  bodyText: string;
+}
+
+export interface EmailMetadata {
+  toneCheckPassed: boolean;
+  referencesCheckPassed: boolean;
+  followUpSchedule: any[]; // Adjust type as needed
+}
 
 export interface PostProcessorFlag {
   type: 'warning' | 'error';
