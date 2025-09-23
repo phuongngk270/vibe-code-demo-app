@@ -59,7 +59,7 @@ First, extract all section headers (e.g., "Section 1", "Section I", "Appendix A"
 Then, for each cross-reference found in the text (e.g., "see Section 1"), check if the referenced section header actually exists.
 If a cross-reference points to a non-existent section, emit an issue object with the type 'cross_reference'.
 Also, detect standard typos and formatting issues (spacing, punctuation, capitalization, alignment, font inconsistencies, numbering/bullets).
-Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "fileName": "string",\n  "issues": [\n    {\n      "page": 1,\n      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|cross_reference|other",\n      "message": "string",\n      "original": "string",\n      "suggestion": "string",\n      "locationHint": "paragraph/line context or short snippet"\n    }\n  ],\n  "summary": { "issueCount": 0, "pagesAffected": [1, 2] }\n}\n`;
+Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "fileName": "string",\n  "issues": [\n    {\n      "page": 1,\n      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|cross_reference|other",\n      "message": "string",\n      "original": "string",\n      "suggestion": "string",\n      "locationHint": "paragraph/line context or short snippet"\n    }\n  ],\n  "summary": { "issueCount": 0, "pagesAffected": [1, 2 ] }\n}\n`;
 
   try {
     const modelPromise = model.generateContent([
@@ -74,7 +74,14 @@ Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "
     const result = await Promise.race([modelPromise, timeoutPromise]);
     const raw = result.response.text().trim();
     const cleaned = raw.replace(/```json|```/g, '').trim();
-    return JSON.parse(cleaned) as AnalysisResult;
+    try {
+      const parsed = JSON.parse(cleaned) as AnalysisResult;
+      return parsed;
+    } catch (jsonError) {
+      console.error('JSON Parse Error:', jsonError);
+      console.error('Failed JSON string:', cleaned.substring(0, 2000)); // Log the first 2000 characters
+    throw new Error('Failed to get a valid JSON response from the model.');
+  }
   } catch (e) {
     console.error('Error calling or parsing Gemini response:', e);
     throw new Error('Failed to get a valid JSON response from the model.');
@@ -142,3 +149,4 @@ export const saveToSupabaseServer = async (normalizedData: AnalysisResult) => {
   }
   return { id: data?.id };
 };
+

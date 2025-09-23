@@ -1,6 +1,9 @@
-import Head from 'next/head';
+import { SignedIn, SignedOut, UserButton, useClerk } from '@clerk/nextjs';
 import Link from 'next/link';
+import Head from 'next/head';
 import React from 'react';
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/router';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,6 +11,10 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, title }: LayoutProps) {
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+  const { openSignIn } = useClerk();
+
   return (
     <div className="min-h-screen bg-[#F5F7FB] text-[#101828] flex flex-col">
       <Head>
@@ -31,12 +38,26 @@ export default function Layout({ children, title }: LayoutProps) {
               History
             </Link>
           </nav>
-          <Link
-            href="/review"
-            className="rounded-full bg-[#2A7DE1] text-white px-4 py-2 text-sm font-semibold hover:bg-[#1e5cad]"
-          >
-            Start review
-          </Link>
+          <div className="flex items-center gap-4">
+            <SignedIn>
+              <Link href="/review" className="btn btn-primary">Start review</Link>
+            </SignedIn>
+            <SignedOut>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() =>
+                  openSignIn({
+                    redirectUrl: '/review',
+                    afterSignInUrl: '/review',
+                  })
+                }
+              >
+                Start review
+              </button>
+            </SignedOut>
+              <UserButton afterSignOutUrl="/" />
+          </div>
         </div>
       </header>
       <main className="flex-1 container-xl py-10">{children}</main>
@@ -48,5 +69,3 @@ export default function Layout({ children, title }: LayoutProps) {
     </div>
   );
 }
-
-

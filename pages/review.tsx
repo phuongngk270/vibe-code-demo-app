@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import React, { useState, FormEvent } from 'react';
+import IssuesTable from '@/components/IssuesTable';
 
 type Issue = {
   page: number;
@@ -65,16 +65,10 @@ export default function ReviewPage() {
     }
   };
 
-  return (
-      <div className="container-xl py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">New PDF Review</h1>
-          <div className="space-x-4">
-            <Link href="/" className="link">Home</Link>
-            <Link href="/history" className="link">History</Link>
-          </div>
-        </div>
 
+  return (
+    <>
+        <h1 className="text-3xl font-bold mb-6">New PDF Review</h1>
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="flex items-center gap-4">
             <input
@@ -96,47 +90,10 @@ export default function ReviewPage() {
           </div>
         )}
 
-        {result && (
-          <div className="card mt-6">
-            <h2 className="text-xl font-semibold mb-2">
-              Analysis for: <span className="font-mono">{result.fileName}</span>
-            </h2>
-            <p className="mb-4">
-              Total issues found: <strong>{result.summary.issueCount}</strong>
-            </p>
-            {result.issues.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Page</th>
-                      <th>Type</th>
-                      <th>Message</th>
-                      <th>Original</th>
-                      <th>Suggestion</th>
-                      <th>Location</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {result.issues.map((issue, idx) => (
-                      <tr key={idx}>
-                        <td>{issue.page}</td>
-                        <td>{issue.type}</td>
-                        <td>{issue.message}</td>
-                        <td className="font-mono text-red-600">{issue.original}</td>
-                        <td className="font-mono text-green-600">{issue.suggestion}</td>
-                        <td className="text-muted">{issue.locationHint}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="alert alert-success mt-4">No issues detected.</div>
-            )}
-          </div>
+        {result?.issues && (
+            <IssuesTable issues={result.issues} />
         )}
-      </div>
+    </>
   );
 }
 
