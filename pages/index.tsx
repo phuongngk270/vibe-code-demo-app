@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { SignedIn, SignedOut, useClerk } from '@clerk/nextjs';
 
 export default function Home() {
+  const { openSignIn } = useClerk();
+
   return (
       <div className="text-center py-20">
         <h1 className="text-5xl font-bold tracking-tight">
@@ -12,12 +15,31 @@ export default function Home() {
           quality every time.
         </p>
         <div className="mt-10 flex justify-center gap-4">
-          <Link href="/review" className="btn btn-primary">
-            Start New Review
-          </Link>
-          <Link href="/history" className="btn btn-outline">
-            View History
-          </Link>
+          {/* Signed-in users see direct links */}
+          <SignedIn>
+            <Link href="/review" className="btn btn-primary">
+              Start New Review
+            </Link>
+            <Link href="/history" className="btn btn-outline">
+              View History
+            </Link>
+          </SignedIn>
+
+          {/* Signed-out users see buttons that trigger sign-in */}
+          <SignedOut>
+            <button
+              className="btn btn-primary"
+              onClick={() => openSignIn({ redirectUrl: '/review', afterSignInUrl: '/review' })}
+            >
+              Start New Review
+            </button>
+            <button
+              className="btn btn-outline"
+              onClick={() => openSignIn({ redirectUrl: '/history', afterSignInUrl: '/history' })}
+            >
+              View History
+            </button>
+          </SignedOut>
     </div>
       </div>
   );
