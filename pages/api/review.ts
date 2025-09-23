@@ -6,6 +6,7 @@ import {
   normalizeData,
   saveToSupabaseServer,
 } from '../../lib/review';
+// import { generateScreenshots } from '../../lib/screenshot'; // Temporarily disabled
 
 export const config = {
   api: {
@@ -41,6 +42,15 @@ export default async function handler(
       singleFile.originalFilename || 'uploaded_file'
     );
     normalizedData.summary.issueCount = normalizedData.issues.length;
+
+    // TODO: Re-enable screenshot generation once PDF.js setup is working
+    // For now, skip screenshot generation to avoid build errors
+    console.log(`Skipping screenshot generation for ${normalizedData.issues.length} issues (temporarily disabled)`);
+
+    // Set all screenshot URLs to undefined for now
+    normalizedData.issues.forEach((issue) => {
+      issue.screenshotUrl = undefined;
+    });
 
     const { error } = await saveToSupabaseServer(normalizedData);
     // Save to database

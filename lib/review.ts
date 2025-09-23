@@ -14,6 +14,7 @@ export type AnalysisIssue = {
   original: string;
   suggestion: string;
   locationHint: string;
+  screenshotUrl?: string;
 };
 
 export type AnalysisResult = {

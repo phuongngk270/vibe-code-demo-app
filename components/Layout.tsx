@@ -34,29 +34,49 @@ export default function Layout({ children, title }: LayoutProps) {
             <Link href="/review" className="text-gray-500 hover:text-[#2A7DE1]">
               New Review
             </Link>
-            <Link href="/history" className="text-gray-500 hover:text-[#2A7DE1]">
-              History
-            </Link>
+            {/* History nav item */}
+            <SignedIn>
+              <Link href="/history" className="text-gray-500 hover:text-[#2A7DE1]">
+                History
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <button
+                type="button"
+                className="text-gray-500 hover:text-[#2A7DE1]"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openSignIn({ redirectUrl: '/history', afterSignInUrl: '/history' });
+                }}
+              >
+                History
+              </button>
+            </SignedOut>
           </nav>
           <div className="flex items-center gap-4">
+            {/* Signed-in: show Start review link + avatar */}
             <SignedIn>
-              <Link href="/review" className="btn btn-primary">Start review</Link>
+              <div className="flex items-center gap-4">
+                <Link href="/review" className="btn btn-primary">Start review</Link>
+                <UserButton appearance={{ elements: { avatarBox: 'h-8 w-8' } }} />
+              </div>
             </SignedIn>
+
+            {/* Signed-out: show Log in button (opens Clerk) */}
             <SignedOut>
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={() =>
                   openSignIn({
-                    redirectUrl: '/review',
-                    afterSignInUrl: '/review',
+                    redirectUrl: '/history',     // where the user wanted to go when they clicked History
+                    afterSignInUrl: '/history',  // fallback for older Clerk versions
                   })
                 }
               >
-                Start review
+                Log in
               </button>
             </SignedOut>
-              <UserButton afterSignOutUrl="/" />
           </div>
         </div>
       </header>

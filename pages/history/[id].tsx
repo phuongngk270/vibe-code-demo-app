@@ -3,6 +3,7 @@ import type { AnalysisIssue } from '@/lib/review';
 import type { GetServerSideProps } from 'next';
 import React, { useMemo } from 'react';
 import IssuesTable from '@/components/IssuesTable';
+import { RedirectToSignIn, SignedIn, SignedOut } from '@clerk/nextjs';
 
 type DetailsProps = {
   request: {
@@ -18,23 +19,31 @@ type DetailsProps = {
 
 export default function Details({ request }: DetailsProps) {
   return (
-    <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
-        <h1 className="text-2xl font-bold">
-          Analysis for{' '}
-          <span className="text-primary">{request.ai_result.fileName}</span>
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          Analyzed on {new Date(request.created_at).toLocaleString()}
-        </p>
+    <>
+      <SignedOut>
+        <RedirectToSignIn redirectUrl={typeof window !== 'undefined' ? window.location.pathname : '/history'} />
+      </SignedOut>
 
-        <div className="mt-8">
-          {request.ai_result.issues.length > 0 ? (
-              <IssuesTable issues={request.ai_result.issues} />
-          ) : (
-            <p>No issues were found in this document.</p>
-          )}
+      <SignedIn>
+        <div className="bg-white rounded-acl shadow-elev-2 p-6 md:p-8">
+            <h1 className="text-2xl font-bold">
+              Analysis for{' '}
+              <span className="text-primary">{request.ai_result.fileName}</span>
+            </h1>
+            <p className="text-sm text-gray-500 mt-1">
+              Analyzed on {new Date(request.created_at).toLocaleString()}
+            </p>
+
+            <div className="mt-8">
+              {request.ai_result.issues.length > 0 ? (
+                  <IssuesTable issues={request.ai_result.issues} />
+              ) : (
+                <p>No issues were found in this document.</p>
+              )}
+            </div>
         </div>
-    </div>
+      </SignedIn>
+    </>
   );
 }
 

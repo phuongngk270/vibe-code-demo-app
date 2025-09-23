@@ -86,7 +86,11 @@ const IssuesTable: React.FC<Props> = ({
                     return (
                         <button
                             key={type}
-                            className={`px-3 py-1 rounded-full border border-gray-300 text-gray-700 text-sm ${filterType === type ? 'bg-[#2A7DE1 text-white' : ''}`}
+                            className={`px-3 py-1 rounded-full border text-sm transition-colors ${
+                                filterType === type
+                                    ? 'bg-[#2A7DE1] text-white border-[#2A7DE1]'
+                                    : 'bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200'
+                            }`}
                             onClick={() => setFilterType(type)}
                         >
                             {capitalizedType}
@@ -115,16 +119,23 @@ const IssuesTable: React.FC<Props> = ({
                                 <td>{issue.original}</td>
                                 <td>{issue.suggestion}</td>
                                 <td className="relative group">
-                                    {issue.locationHint}
+                                    <span className="cursor-help">{issue.locationHint || 'No location specified'}</span>
                                     {issue.screenshotUrl ? (
-                                        <div className="absolute z-50 hidden group-hover:block max-w-[360px] rounded-lg border bg-white shadow-xl p-2">
-                                            <img src={issue.screenshotUrl} alt="Location Preview" className="w-full h-auto" />
+                                        <div className="absolute z-50 hidden group-hover:block left-0 top-full mt-2 max-w-[360px] rounded-lg border bg-white shadow-xl p-2">
+                                            <img
+                                                src={issue.screenshotUrl}
+                                                alt="Location Preview"
+                                                className="w-full h-auto rounded"
+                                                loading="lazy"
+                                            />
+                                            <p className="text-xs text-gray-500 mt-1">Click to enlarge</p>
                                         </div>
-                                    ) : (
-                                        <div className="absolute z-50 hidden group-hover:block rounded-lg border bg-white shadow-xl p-2">
-                                            Preview not available
+                                    ) : issue.locationHint ? (
+                                        <div className="absolute z-50 hidden group-hover:block left-0 top-full mt-2 max-w-[200px] rounded-lg border bg-white shadow-xl p-3">
+                                            <p className="text-sm text-gray-600">No preview available</p>
+                                            <p className="text-xs text-gray-400 mt-1">Screenshot not generated for this issue</p>
                                         </div>
-                                    )}
+                                    ) : null}
                                 </td>
                             </tr>
                         );
