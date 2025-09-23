@@ -48,7 +48,7 @@ export async function generateScreenshot({
 
     // Render page to canvas
     const renderContext = {
-      canvasContext: context,
+      canvasContext: context as any,
       viewport: viewport,
     };
 

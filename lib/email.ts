@@ -47,6 +47,7 @@ The output should be a JSON object with the following structure:
 export interface Customer {
   name: string;
   timezone: string;
+  isExistingCustomer?: boolean;
 }
 
 export interface Fund {
