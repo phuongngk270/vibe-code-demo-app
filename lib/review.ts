@@ -80,9 +80,9 @@ Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "
       return parsed;
     } catch (jsonError) {
       console.error('JSON Parse Error:', jsonError);
-      console.error('Failed JSON string:', cleaned.substring(0, 2000)); // Log the first 2000 characters
-    throw new Error('Failed to get a valid JSON response from the model.');
-  }
+      console.error('Raw response from model:', cleaned); // Log the entire raw response
+      throw new Error(`Failed to parse JSON response from the model. Raw response: ${cleaned}`);
+    }
   } catch (e) {
     console.error('Error calling or parsing Gemini response:', e);
     throw new Error('Failed to get a valid JSON response from the model.');

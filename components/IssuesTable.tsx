@@ -127,8 +127,8 @@ const IssuesTable: React.FC<Props> = ({
                                             <div className="text-green-800 leading-relaxed">{issue.suggestion}</div>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-4 whitespace-nowrap text-sm relative group">
-                                        <span className="cursor-help text-gray-900">{issue.locationHint || 'No location specified'}</span>
+                                    <td className="px-4 py-4 text-sm relative group">
+                                        <span className="cursor-help text-gray-900 break-words">{issue.locationHint || 'No location specified'}</span>
                                         {issue.screenshotUrl ? (
                                             <div className="absolute z-50 hidden group-hover:block left-0 top-full mt-2 max-w-[360px] rounded-lg border bg-white shadow-xl p-2">
                                                 <img
