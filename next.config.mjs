@@ -3,8 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // If you use the /app router, keep these defaults. We're on pages router, so this is fine.
-  // Add any future options here as needed.
+  webpack: (config, { isServer }) => {
+    config.resolve.alias['pdfjs-dist/build/pdf.worker.js'] = require.resolve('pdfjs-dist/build/pdf.worker.js');
+    return config;
+  },
 };
 
 export default nextConfig;

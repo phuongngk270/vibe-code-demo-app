@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "setup-storage": "npx tsx scripts/setup-storage.ts",
-    "postinstall": "cp node_modules/pdfjs-dist/build/pdf.worker.js public/pdf.worker.js"
+    "setup-storage": "npx tsx scripts/setup-storage.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.32.0",
