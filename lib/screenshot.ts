@@ -1,11 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { createServerSupabase } from './supabaseServer';
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 import { createCanvas } from 'canvas';
 
-// Disable worker for Node.js environment
-pdfjsLib.GlobalWorkerOptions.workerSrc = false;
 
 export interface ScreenshotOptions {
   pdfBuffer: Buffer;
@@ -24,8 +21,11 @@ export async function generateScreenshot({
   issueIndex
 }: ScreenshotOptions): Promise<string | null> {
   try {
+    const pdfjs = await import('pdfjs-dist');
+    pdfjs.GlobalWorkerOptions.workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.js');
+
     // Load PDF document
-    const pdfDocument = await pdfjsLib.getDocument({
+    const pdfDocument = await pdfjs.getDocument({
       data: pdfBuffer,
       useSystemFonts: true
     }).promise;
