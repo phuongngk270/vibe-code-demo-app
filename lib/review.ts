@@ -9,7 +9,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export type AnalysisIssue = {
   page: number;
-  type: 'typo' | 'spacing' | 'punctuation' | 'capitalization' | 'alignment' | 'font' | 'formatting' | 'cross_reference' | 'other';
+  type: 'typo' | 'spacing' | 'punctuation' | 'capitalization' | 'alignment' | 'font' | 'formatting' | 'cross_reference' | 'logic_point' | 'other';
   message: string;
   original: string;
   suggestion: string;
@@ -55,12 +55,34 @@ export const callGemini = async (base64File: string): Promise<AnalysisResult> =>
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
-Act as a PDF QA checker for a data science team.
+Act as a PDF QA checker for a data science team specializing in subscription documents.
 First, extract all section headers (e.g., "Section 1", "Section I", "Appendix A").
 Then, for each cross-reference found in the text (e.g., "see Section 1"), check if the referenced section header actually exists.
 If a cross-reference points to a non-existent section, emit an issue object with the type 'cross_reference'.
 Also, detect standard typos and formatting issues (spacing, punctuation, capitalization, alignment, font inconsistencies, numbering/bullets).
-Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "fileName": "string",\n  "issues": [\n    {\n      "page": 1,\n      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|cross_reference|other",\n      "message": "string",\n      "original": "string",\n      "suggestion": "string",\n      "locationHint": "paragraph/line context or short snippet"\n    }\n  ],\n  "summary": { "issueCount": 0, "pagesAffected": [1, 2 ] }\n}\n`;
+
+ADDITIONALLY, detect the following logic points that require customer confirmation and emit as type 'logic_point':
+1. Funds exclusiveness issues - multiple funds mentioned without clear exclusiveness
+2. Missing pages or mismatched table of contents
+3. LPA/PA/PPM references that may be incorrect or outdated
+4. Subscription amount or percentage discrepancies
+5. Date inconsistencies (closing dates, commitment periods)
+6. Signature page issues or missing signatures
+7. Capital call timing or process unclear
+8. Management fee calculation errors
+9. Carried interest terms unclear
+10. Investment period definitions inconsistent
+11. Key person provisions unclear
+12. Transfer restrictions not properly defined
+13. Advisory committee composition unclear
+14. Indemnification terms inconsistent
+15. Tax election procedures unclear
+16. Reporting frequency or format unclear
+17. Termination or withdrawal provisions inconsistent
+
+For logic_point issues, the message should describe what needs customer confirmation, original should contain the problematic text, and suggestion should indicate what clarification is needed.
+
+Return STRICT JSON ONLY (no prose, no code fences) matching this schema:\n{\n  "fileName": "string",\n  "issues": [\n    {\n      "page": 1,\n      "type": "typo|spacing|punctuation|capitalization|alignment|font|formatting|cross_reference|logic_point|other",\n      "message": "string",\n      "original": "string",\n      "suggestion": "string",\n      "locationHint": "paragraph/line context or short snippet"\n    }\n  ],\n  "summary": { "issueCount": 0, "pagesAffected": [1, 2 ] }\n}\n`;
 
   try {
     const modelPromise = model.generateContent([
@@ -110,7 +132,7 @@ export const normalizeData = (data: Partial<AnalysisResult>, fileName: string): 
     data.issues = [];
   }
 
-  const allowedTypes: AnalysisIssue['type'][] = ['typo', 'spacing', 'punctuation', 'capitalization', 'alignment', 'font', 'formatting', 'cross_reference', 'other'];
+  const allowedTypes: AnalysisIssue['type'][] = ['typo', 'spacing', 'punctuation', 'capitalization', 'alignment', 'font', 'formatting', 'cross_reference', 'logic_point', 'other'];
   data.issues = data.issues.map((issue: Partial<AnalysisIssue>): AnalysisIssue => ({
     page: Math.max(1, parseInt(String(issue.page), 10) || 1),
     type: allowedTypes.includes(issue.type as AnalysisIssue['type']) ? (issue.type as AnalysisIssue['type']) : 'other',

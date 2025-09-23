@@ -51,7 +51,9 @@ export interface Customer {
 }
 
 export interface Fund {
-  name: string;
+  name?: string;
+  fullName?: string;
+  shortName?: string;
 }
 
 export interface SubDoc {
@@ -105,16 +107,25 @@ export interface EmailGenerationResult {
 
 function constructUserPrompt(inputs: EmailGenerationInputs): string {
     const { customer, funds, issues, typos, expectedDate, firstTestingDate } = inputs;
+
+    // Separate logic points from other issues
+    const logicPoints = issues.filter(issue => issue.category === 'logic_point');
+    const otherIssues = issues.filter(issue => issue.category !== 'logic_point');
+
     const prompt = `
 Generate the JSON email draft per schema.
 **Customer:** ${JSON.stringify(customer)}
 **Funds:** ${JSON.stringify(funds)}
 **Issues (sample):**
-${issues.map(issue => `• ${issue.category} at “${issue.sectionTitle}”, ${issue.pageRef} (needs updated PDF: ${issue.needsUpdatedPDF})`).join('\n')}
+${otherIssues.map(issue => `• ${issue.category} at "${issue.sectionTitle}", ${issue.pageRef} (needs updated PDF: ${issue.needsUpdatedPDF})`).join('\n')}
+**Logic Points requiring confirmation:**
+${logicPoints.map(issue => `• ${issue.sectionTitle}, ${issue.pageRef} - requires customer confirmation and clarification`).join('\n')}
 **Typos:**
-${typos.map(typo => `• ${typo.pageRef} (“${typo.excerpt}”→“${typo.suggestedFix}”)`).join('\n')}
+${typos.map(typo => `• ${typo.pageRef} ("${typo.excerpt}"→"${typo.suggestedFix}")`).join('\n')}
 **ExpectedDate:** ${expectedDate}
 **firstTestingDate:** ${firstTestingDate || 'N/A'}
+
+**IMPORTANT:** For logic_point issues, use the appropriate template from the Logic Point Templates section to generate professional, clear questions that require customer confirmation.
 `;
     return prompt;
 }
