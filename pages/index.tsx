@@ -10,8 +10,8 @@ export default function Home() {
           Catch errors before they cost you.
         </h1>
         <p className="mt-4 text-lg text-muted max-w-2xl mx-auto">
-          Our AI-powered tool scans your PDF documents for typos, formatting
-          inconsistencies, and other common issues, ensuring professional
+          Our AI-powered tool scans your subscription documents for typos, formatting
+          inconsistencies, and logic points requiring customer confirmation, ensuring professional
           quality every time.
         </p>
         <div className="mt-10 flex justify-center gap-4">
@@ -47,7 +47,7 @@ export default function Home() {
       <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           { t:'Upload sub-doc (PDF)', c:'Drop your subscription sub-doc to start.', Icon: UploadIcon },
-          { t:'AI review', c:'We scan for inconsistencies & formatting issues.', Icon: ReviewIcon },
+          { t:'AI review', c:'We scan for inconsistencies, formatting issues & logic points.', Icon: ReviewIcon },
           { t:'Export drafting errors', c:'Download a clean, categorized issue list.', Icon: ExportIcon },
           { t:'Auto-draft email', c:'Generate a confirmation email with exact page refs.', Icon: MailIcon, beta:true },
         ].map((s, i) => (
