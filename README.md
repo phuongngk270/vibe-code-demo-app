@@ -1,13 +1,25 @@
 # Anduin Sub-doc Reviewer
 
-This application is a sub-document reviewer that leverages AI to analyze PDF documents for various issues (typos, formatting, capitalization, cross-references) and generates a review email based on the findings.
+This application is a subscription document reviewer that leverages AI to analyze PDF documents for various issues (typos, formatting, logic points requiring customer confirmation) and generates professional review emails based on the findings.
 
 ## Features
 
-*   **PDF Upload & Analysis:** Upload PDF documents for AI-powered review.
-*   **Issue Detection:** Identifies typos, spacing, punctuation, capitalization, alignment, font, formatting, and cross-reference issues.
-*   **AI-Generated Review Email:** Automatically drafts a customer-friendly email summarizing the findings and proposing solutions.
-*   **Screenshot Generation:** Generates screenshots of specific pages related to identified issues.
+*   **PDF Upload & Analysis:** Upload subscription documents for comprehensive AI-powered review.
+*   **Advanced Issue Detection:** Identifies typos, spacing, punctuation, capitalization, alignment, font, formatting, and cross-reference issues.
+*   **Logic Point Detection:** Detects 17 types of subscription document logic points that require customer confirmation including:
+    *   Fund exclusiveness issues
+    *   Missing pages or table of contents mismatches
+    *   LPA/PA/PPM reference inconsistencies
+    *   Subscription amount discrepancies
+    *   Date inconsistencies and signature issues
+    *   Capital call, management fee, and carried interest terms
+    *   Investment period and key person provisions
+    *   And more subscription-specific validation points
+*   **Professional Email Generation:** Automatically drafts customer-friendly confirmation emails following legal-ops best practices with exact page references.
+*   **Real Email Sending:** Send emails directly to customers using Resend API integration with demo mode fallback.
+*   **Screenshot Generation:** Generates visual previews of specific pages related to identified issues.
+*   **History Tracking:** View and manage previous document reviews with authentication via Clerk.
+*   **Enhanced UI:** Intuitive interface with animated backgrounds and professional design.
 
 ## Getting Started
 
@@ -29,6 +41,8 @@ Create a `.env` file in the root of the project based on `.env.example` and popu
 *   `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Public anonymous key for your Supabase project.
 *   `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Your Clerk.dev publishable key for authentication.
 *   `CLERK_SECRET_KEY`: Your Clerk.dev secret key.
+*   `RESEND_API_KEY`: Your Resend API key for email sending (optional - app works in demo mode without it).
+*   `FROM_EMAIL`: The email address to send emails from (e.g., noreply@yourdomain.com).
 
 ### Installation
 
@@ -61,6 +75,28 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Tech Stack
+
+*   **Framework:** Next.js 14 with TypeScript
+*   **AI Integration:** Google Gemini API for document analysis and logic point detection
+*   **Database:** Supabase (PostgreSQL)
+*   **Authentication:** Clerk.dev
+*   **Email Service:** Resend API
+*   **PDF Processing:** PDF.js for screenshot generation
+*   **UI/UX:** Tailwind CSS with custom animations
+*   **Deployment:** Vercel
+
+## How It Works
+
+1. **Document Upload:** Users upload subscription PDF documents through the web interface
+2. **AI Analysis:** Google Gemini analyzes the document for:
+   - Standard formatting issues (typos, spacing, etc.)
+   - Subscription-specific logic points requiring customer confirmation
+3. **Issue Categorization:** Results are categorized and displayed with page references and screenshots
+4. **Email Generation:** Professional confirmation emails are generated following legal-ops templates
+5. **Email Delivery:** Emails can be sent directly to customers or previewed in demo mode
+6. **History Tracking:** All reviews are saved with user authentication for future reference
+
 #### Build & Deploy
 
 ```bash
@@ -70,7 +106,7 @@ npm start
 
 ### Live Demo
 
-[Add Vercel Live URL Here]
+[https://subdoc-reviewer-ieuuw8hl5-phuongnguyen-3338s-projects.vercel.app](https://subdoc-reviewer-ieuuw8hl5-phuongnguyen-3338s-projects.vercel.app)
 
 ## Learn More
 
