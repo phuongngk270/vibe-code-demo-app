@@ -2,15 +2,15 @@
 
 ## 1. Introduction
 
-This document outlines the requirements for the Sub-Document Reviewer App, a tool designed to assist DS teammmates in efficiently reviewing sub-documents (PDFs) for formatting inconsistencies, typos, and other critical issues before digitization. The application leverages AI to automate the detection process and streamline the generation of review feedback.
+This document outlines the requirements for the Subscription Document Reviewer App, a tool designed to assist DS teammates in efficiently reviewing sub-documents (PDFs) for formatting inconsistencies, typos, and other critical issues before digitization. The application leverages AI to automate the detection process and streamline the generation of review feedback.
 
 ## 2. Problem Statement
 
-DS teammates spend significant time manually reviewing sub-documents for errors, leading to a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
+DS teammates spend a significant amount of time manually reviewing sub-documents for errors, resulting in a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
 
 ## 3. Target Users
 
-The primary target users are Data Science (DS) team members and legal-ops professionals responsible for reviewing sub-documents and ensuring their quality before further processing or digitization.
+The primary target users are Digitization Service (DS) team members responsible for reviewing sub-documents and ensuring their quality before further processing or digitization.
 
 ## 4. Goals
 
@@ -68,7 +68,7 @@ The primary target users are Data Science (DS) team members and legal-ops profes
     *   Sends relevant data to the Gemini API for issue detection.
     *   Generates screenshots for identified issues.
 5.  **The application displays the detected issues** in a table format on the `/review` page.
-6.  **User reviews the issues and generated screenshots.**
+6.  **User reviews the issues and generates screenshots.**
 7.  **User initiates the email generation process.**
 8.  **The application generates a draft review email** based on the issues.
 9.  **User previews the email** and can copy it for sending.
