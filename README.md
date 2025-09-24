@@ -92,21 +92,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ![Main Upload Interface](./docs/screenshots/main-upload.png)
 *Clean, intuitive interface for uploading subscription documents with progress indicators*
 
-### AI Analysis Results
-![Analysis Results](./docs/screenshots/analysis-results.png)
-*Comprehensive issue detection with categorization, page references, and visual previews*
-
 ### Email Preview & Editing
 ![Email Preview](./docs/screenshots/email-preview.png)
 *Professional email generation with inline editing capabilities and recipient management*
 
-### History Management
-![History View](./docs/screenshots/history-view.png)
-*Complete history tracking with analysis details and clear history functionality*
-
-### History Detail View
-![History Details](./docs/screenshots/history-detail.png)
-*Detailed view of historical analyses with email generation capabilities*
+### Additional Features
+The application also includes:
+- **AI Analysis Results**: Comprehensive issue detection with categorization, page references, and visual previews
+- **History Management**: Complete history tracking with analysis details and clear history functionality
+- **History Detail View**: Detailed view of historical analyses with email generation capabilities
 
 > **Note:** Screenshots showcase the key features including document upload, AI-powered analysis results, email generation with editing capabilities, comprehensive history tracking, and the new clear history functionality.
 
