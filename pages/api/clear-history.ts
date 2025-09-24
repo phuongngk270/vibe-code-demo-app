@@ -23,7 +23,7 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       message: 'History cleared successfully',
-      deletedCount: data?.length || 0
+      deletedCount: Array.isArray(data) ? data.length : 0
     });
   } catch (error) {
     console.error('Unexpected error clearing history:', error);
