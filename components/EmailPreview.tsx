@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, X, Mail } from 'lucide-react';
+import { AlertTriangle, CheckCircle, X, Mail, Edit } from 'lucide-react';
 import type { EmailGenerationResult, Issue, Typo } from '../lib/email';
 
 interface Props {
@@ -25,6 +25,11 @@ const EmailPreview: React.FC<Props> = ({
   const [scheduleTime, setScheduleTime] = useState(10);
   const [recipientEmail, setRecipientEmail] = useState(defaultRecipientEmail);
   const [emailError, setEmailError] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableContent, setEditableContent] = useState({
+    subject: result.email.subject,
+    bodyText: result.email.bodyText
+  });
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -70,19 +75,53 @@ const EmailPreview: React.FC<Props> = ({
     }, scheduleTime * 60 * 1000);
   };
 
+  const handleStartEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = () => {
+    // Update the email content with edited version
+    result.email.subject = editableContent.subject;
+    result.email.bodyText = editableContent.bodyText;
+    result.email.bodyHtml = editableContent.bodyText.replace(/\n/g, '<br>');
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    // Reset to original content
+    setEditableContent({
+      subject: result.email.subject,
+      bodyText: result.email.bodyText
+    });
+    setIsEditing(false);
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-full overflow-y-auto">
         <div className="p-6 border-b">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Email Preview</h2>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
-              aria-label="Close modal"
-            >
-              <X className="h-6 w-6 text-gray-500" />
-            </button>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {isEditing ? 'Edit Email' : 'Email Preview'}
+            </h2>
+            <div className="flex items-center gap-2">
+              {!isEditing && (
+                <button
+                  onClick={handleStartEdit}
+                  className="p-2 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  aria-label="Edit email"
+                >
+                  <Edit className="h-5 w-5 text-blue-600" />
+                </button>
+              )}
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400"
+                aria-label="Close modal"
+              >
+                <X className="h-6 w-6 text-gray-500" />
+              </button>
+            </div>
           </div>
           <div className="flex items-center space-x-4 mt-2">
             <div className="flex items-center">
@@ -132,13 +171,64 @@ const EmailPreview: React.FC<Props> = ({
             )}
           </div>
 
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Opening</h3>
-            <p className="text-gray-700">{result.email.bodyHtml.split('</p>')[0].replace('<p>', '')}</p>
-          </div>
+          {isEditing ? (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="email-subject" className="block text-sm font-medium text-gray-700 mb-2">
+                  Subject Line
+                </label>
+                <input
+                  type="text"
+                  id="email-subject"
+                  value={editableContent.subject}
+                  onChange={(e) => setEditableContent({...editableContent, subject: e.target.value})}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label htmlFor="email-body" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Content
+                </label>
+                <textarea
+                  id="email-body"
+                  rows={15}
+                  value={editableContent.bodyText}
+                  onChange={(e) => setEditableContent({...editableContent, bodyText: e.target.value})}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="flex justify-end space-x-3 pt-4 border-t">
+                <button
+                  onClick={handleCancelEdit}
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSaveEdit}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Subject</h3>
+                <p className="text-gray-700 font-medium">{result.email.subject}</p>
+              </div>
 
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Questions</h3>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Opening</h3>
+                <p className="text-gray-700">{result.email.bodyHtml.split('</p>')[0].replace('<p>', '')}</p>
+              </div>
+            </>
+          )}
+
+          {!isEditing && (
+            <div>
+              <h3 className="font-semibold text-lg mb-2">Questions</h3>
             <div className="space-y-4">
               {/* Render Issues */}
               {issues.length > 0 && (
@@ -212,42 +302,45 @@ const EmailPreview: React.FC<Props> = ({
                   <p>No issues or typos found. The document looks good!</p>
                 </div>
               )}
+              </div>
             </div>
-          </div>
 
-          <div>
-            <h3 className="font-semibold text-lg mb-2">Closing</h3>
-            <p className="text-gray-700">{result.email.bodyHtml.split('<p>').pop()?.replace('</p>', '')}</p>
-          </div>
-        </div>
-
-        <div className="p-6 bg-gray-50 rounded-b-lg flex justify-end space-x-4">
-          <button onClick={onRegenerate} className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
-            Regenerate
-          </button>
-          {isScheduling ? (
-            <div className="flex items-center space-x-2">
-              <span className="text-sm">Sending in {scheduleTime} minutes...</span>
+            <div>
+              <h3 className="font-semibold text-lg mb-2">Closing</h3>
+              <p className="text-gray-700">{result.email.bodyHtml.split('<p>').pop()?.replace('</p>', '')}</p>
             </div>
-          ) : (
-            <>
-              <button
-                onClick={handleScheduleSend}
-                disabled={!recipientEmail || !!emailError}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                Schedule Send (10 min)
-              </button>
-              <button
-                onClick={handleSendNow}
-                disabled={!recipientEmail || !!emailError}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-              >
-                Send Now
-              </button>
-            </>
           )}
         </div>
+
+        {!isEditing && (
+          <div className="p-6 bg-gray-50 rounded-b-lg flex justify-end space-x-4">
+            <button onClick={onRegenerate} className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
+              Regenerate
+            </button>
+            {isScheduling ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm">Sending in {scheduleTime} minutes...</span>
+              </div>
+            ) : (
+              <>
+                <button
+                  onClick={handleScheduleSend}
+                  disabled={!recipientEmail || !!emailError}
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  Schedule Send (10 min)
+                </button>
+                <button
+                  onClick={handleSendNow}
+                  disabled={!recipientEmail || !!emailError}
+                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  Send Now
+                </button>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
