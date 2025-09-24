@@ -6,15 +6,15 @@ This document outlines the requirements for the Subscription Document Reviewer A
 
 ## 2. Problem Statement
 
-DS teammates spend a significant amount of time manually reviewing sub-documents for errors, resulting in a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
+DS teammates spend a significant amount of time manually reviewing sub-docs for errors, resulting in a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
 
 ## 3. Target Users
 
-The primary target users are Digitization Service (DS) team members responsible for reviewing sub-documents and ensuring their quality before further processing or digitization.
+The primary target users are Digitization Service (DS) team members responsible for reviewing sub-docs and ensuring their quality before further processing or digitization.
 
 ## 4. Goals
 
-*   To reduce the manual effort and time spent on sub-document review.
+*   To reduce the manual effort and time spent on sub-doc review.
 *   To improve the accuracy and consistency of issue detection.
 *   To provide a streamlined process for generating review feedback (emails).
 *   To enhance the overall efficiency of the document digitization workflow.
