@@ -2,11 +2,11 @@
 
 ## 1. Introduction
 
-This document outlines the requirements for the Sub-Document Reviewer App, a tool designed to assist legal-ops teams in efficiently reviewing sub-documents (PDFs) for formatting inconsistencies, typos, and other critical issues before digitization. The application leverages AI to automate the detection process and streamline the generation of review feedback.
+This document outlines the requirements for the Sub-Document Reviewer App, a tool designed to assist DS teammmates in efficiently reviewing sub-documents (PDFs) for formatting inconsistencies, typos, and other critical issues before digitization. The application leverages AI to automate the detection process and streamline the generation of review feedback.
 
 ## 2. Problem Statement
 
-Legal-ops teams spend significant time manually reviewing sub-documents for errors, leading to a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
+DS teammates spend significant time manually reviewing sub-documents for errors, leading to a time-consuming and error-prone process. Inconsistent formatting, typos, and incorrect cross-references can cause delays and inaccuracies in the digitization workflow.
 
 ## 3. Target Users
 
