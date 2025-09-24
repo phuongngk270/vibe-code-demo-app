@@ -86,6 +86,30 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 *   **UI/UX:** Tailwind CSS with custom animations
 *   **Deployment:** Vercel
 
+## Screenshots
+
+### Main Upload Interface
+![Main Upload Interface](./docs/screenshots/main-upload.png)
+*Clean, intuitive interface for uploading subscription documents with progress indicators*
+
+### AI Analysis Results
+![Analysis Results](./docs/screenshots/analysis-results.png)
+*Comprehensive issue detection with categorization, page references, and visual previews*
+
+### Email Preview & Editing
+![Email Preview](./docs/screenshots/email-preview.png)
+*Professional email generation with inline editing capabilities and recipient management*
+
+### History Management
+![History View](./docs/screenshots/history-view.png)
+*Complete history tracking with analysis details and clear history functionality*
+
+### History Detail View
+![History Details](./docs/screenshots/history-detail.png)
+*Detailed view of historical analyses with email generation capabilities*
+
+> **Note:** Screenshots showcase the key features including document upload, AI-powered analysis results, email generation with editing capabilities, comprehensive history tracking, and the new clear history functionality.
+
 ## How It Works
 
 1. **Document Upload:** Users upload subscription PDF documents through the web interface
@@ -96,6 +120,29 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 4. **Email Generation:** Professional confirmation emails are generated following legal-ops templates
 5. **Email Delivery:** Emails can be sent directly to customers or previewed in demo mode
 6. **History Tracking:** All reviews are saved with user authentication for future reference
+
+## Key Features in Detail
+
+### Email Editing Capability
+Users can now edit generated emails directly in the preview modal:
+- Click the "Edit" button to modify email content
+- Edit both subject line and email body
+- Save or cancel changes with real-time preview
+- Maintains professional formatting while allowing customization
+
+### History Email Generation
+Generate emails from historical document reviews:
+- Access past analyses from the History page
+- Generate new emails based on previously detected issues
+- Same editing and sending capabilities as fresh reviews
+- Useful for follow-ups or re-sending to different recipients
+
+### Clear History Option
+Manage your analysis history with ease:
+- Clear all historical records with a single action
+- Confirmation modal prevents accidental deletions
+- Secure deletion with proper user authentication
+- Maintains clean workspace for active projects
 
 #### Build & Deploy
 
