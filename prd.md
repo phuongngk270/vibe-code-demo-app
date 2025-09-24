@@ -1,4 +1,4 @@
-# Product Requirements Document (PRD) - Sub-Document Reviewer App
+# Product Requirements Document (PRD) - Sub-Doc Reviewer App
 
 ## 1. Introduction
 
