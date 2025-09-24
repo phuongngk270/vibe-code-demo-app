@@ -227,9 +227,10 @@ const EmailPreview: React.FC<Props> = ({
           )}
 
           {!isEditing && (
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Questions</h3>
-            <div className="space-y-4">
+            <>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Questions</h3>
+                <div className="space-y-4">
               {/* Render Issues */}
               {issues.length > 0 && (
                 <div>
@@ -301,14 +302,15 @@ const EmailPreview: React.FC<Props> = ({
                   <CheckCircle className="h-12 w-12 mx-auto mb-3 text-green-500" />
                   <p>No issues or typos found. The document looks good!</p>
                 </div>
-              )}
+                )}
+                </div>
               </div>
-            </div>
 
-            <div>
-              <h3 className="font-semibold text-lg mb-2">Closing</h3>
-              <p className="text-gray-700">{result.email.bodyHtml.split('<p>').pop()?.replace('</p>', '')}</p>
-            </div>
+              <div>
+                <h3 className="font-semibold text-lg mb-2">Closing</h3>
+                <p className="text-gray-700">{result.email.bodyHtml.split('<p>').pop()?.replace('</p>', '')}</p>
+              </div>
+            </>
           )}
         </div>
 
