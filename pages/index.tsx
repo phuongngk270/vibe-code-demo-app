@@ -73,24 +73,31 @@ export default function Home() {
 
 const UploadIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-    <rect x="7" y="13" width="10" height="1.5" rx="0.75" fill="currentColor" opacity="0.3" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25M15.75 9.75l-3.108-3.108a1.125 1.125 0 0 0-1.59 0L6.75 10.5" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m4.5 19.5 15 0" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 14h8M8 17h6" />
+    <text x="12" y="11" textAnchor="middle" fontSize="4" fill="currentColor" opacity="0.7">PDF</text>
   </svg>
 );
 
 const ReviewIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25A8.966 8.966 0 0 1 18 3.75c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-    <circle cx="19" cy="8" r="2" fill="currentColor" opacity="0.4" />
+    <circle cx="12" cy="12" r="9" strokeWidth={2} />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h8" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v8" />
+    <circle cx="9" cy="9" r="1.5" fill="currentColor" opacity="0.4" />
+    <circle cx="15" cy="9" r="1.5" fill="currentColor" opacity="0.4" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 15c1 1 3 1 4 0" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 7l2 2M17 7l-2 2" opacity="0.6" />
   </svg>
 );
 
 const ExportIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.06-9.75 1.5 1.5m1.5-1.5-1.5-1.5" />
-    <rect x="6" y="14" width="12" height="2" rx="1" fill="currentColor" opacity="0.2" />
-    <rect x="8" y="16.5" width="8" height="1" rx="0.5" fill="currentColor" opacity="0.3" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16l4-4m0 0l-4-4m4 4H4" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z" opacity="0.3" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h4M8 14h2" opacity="0.6" />
+    <circle cx="18" cy="8" r="1.5" fill="currentColor" opacity="0.5" />
   </svg>
 );
 
