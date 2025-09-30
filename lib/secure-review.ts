@@ -191,7 +191,7 @@ export class SecureReviewService {
 
       return {
         ...analysisResult,
-        documentId,
+        documentId: documentId || undefined,
         classification,
         sanitization,
         encryptionApplied: true,
