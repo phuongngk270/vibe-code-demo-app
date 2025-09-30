@@ -186,7 +186,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
           <div className="flex justify-end space-x-3 mt-6 pt-6 border-t">
             <Button
               onClick={handleReject}
-              variant="outline"
+              variant="secondary"
               className="px-6 py-2"
             >
               Cancel
