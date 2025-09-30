@@ -180,7 +180,7 @@ export class SecureReviewService {
       // Step 9: Final audit log
       await auditLog(
         AuditAction.DOCUMENT_PROCESSING_COMPLETE,
-        { ...auditContext, documentId, documentClassification: classification.classification },
+        { ...auditContext, documentId: documentId || undefined, documentClassification: classification.classification },
         {
           issues_found: analysisResult.issues.length,
           processing_method: processingMethod,
