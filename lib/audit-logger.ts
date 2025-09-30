@@ -368,7 +368,7 @@ export class AuditLogger {
       JSON.stringify(event.details)
     ]);
 
-    return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+    return [headers.join(','), ...rows.map((row: any[]) => row.join(','))].join('\n');
   }
 }
 
