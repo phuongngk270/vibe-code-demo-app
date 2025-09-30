@@ -6,7 +6,8 @@ import {
   normalizeData,
   saveToSupabaseServer,
 } from '../../lib/review';
-import { generateScreenshots } from '../../lib/screenshot';
+// Temporarily disable screenshots to fix the immediate issue
+// import { generateScreenshots } from '../../lib/screenshot';
 
 export const config = {
   api: {
@@ -43,15 +44,16 @@ export default async function handler(
     );
     normalizedData.summary.issueCount = normalizedData.issues.length;
 
-    const screenshotUrls = await generateScreenshots(
-      fileBuffer,
-      singleFile.originalFilename || 'uploaded_file',
-      normalizedData.issues
-    );
+    // Temporarily disable screenshots for quick fix
+    // const screenshotUrls = await generateScreenshots(
+    //   fileBuffer,
+    //   singleFile.originalFilename || 'uploaded_file',
+    //   normalizedData.issues
+    // );
 
-    normalizedData.issues.forEach((issue, index) => {
-      issue.screenshotUrl = screenshotUrls[index] || undefined;
-    });
+    // normalizedData.issues.forEach((issue, index) => {
+    //   issue.screenshotUrl = screenshotUrls[index] || undefined;
+    // });
 
     const { error } = await saveToSupabaseServer(normalizedData);
     // Save to database
