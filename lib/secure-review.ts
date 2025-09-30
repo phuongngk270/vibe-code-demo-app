@@ -5,7 +5,7 @@ import { encryptDocument, type EncryptionResult } from './encryption';
 import { sanitizeDocument, detectSensitiveContent, type SanitizationResult } from './document-sanitizer';
 import { classifyDocument, type ClassificationResult, DocumentClassification } from './document-classification';
 import { auditLog, AuditAction, type AuditContext } from './audit-logger';
-import { generateSecureScreenshots } from './secure-screenshot';
+import { getSecureScreenshotManager } from './secure-screenshot';
 import { scheduleDocumentRetention } from './retention-policy';
 import { analyzeDocumentWithCompanyLLM } from './company-llm';
 import { processDocumentWithPatterns } from './local-patterns';
@@ -154,7 +154,8 @@ export class SecureReviewService {
       );
 
       // Step 7: Generate secure screenshots
-      const secureScreenshots = await generateSecureScreenshots(
+      const screenshotManager = getSecureScreenshotManager();
+      const secureScreenshots = await screenshotManager.generateSecureScreenshots(
         fileBuffer,
         fileName,
         analysisResult.issues,
