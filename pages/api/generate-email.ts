@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   EmailGenerationInputs,
   EmailGenerationResult,
-  generateReviewEmail,
 } from '../../lib/email';
+import { generateEmailWithN8n } from '../../lib/n8n';
+import { getAuth } from '@clerk/nextjs/server';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,7 +17,11 @@ export default async function handler(
   const inputs: EmailGenerationInputs = req.body;
 
   try {
-    const result = await generateReviewEmail(inputs);
+    // Get user ID for audit trail
+    const { userId } = getAuth(req);
+
+    // Call n8n webhook for email generation instead of Gemini
+    const result = await generateEmailWithN8n(inputs, userId || undefined);
     res.status(200).json(result);
   } catch (error) {
     console.error('Error generating email:', error);

@@ -2,12 +2,11 @@ import { promises as fs } from 'fs';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import {
   parseForm,
-  callGemini,
   normalizeData,
   saveToSupabaseServer,
 } from '../../lib/review';
-// Temporarily disable screenshots to fix the immediate issue
-// import { generateScreenshots } from '../../lib/screenshot';
+import { analyzeDocumentWithN8n } from '../../lib/n8n';
+import { getAuth } from '@clerk/nextjs/server';
 
 export const config = {
   api: {
@@ -25,6 +24,9 @@ export default async function handler(
   }
 
   try {
+    // Get user ID for audit trail
+    const { userId } = getAuth(req);
+
     const { files } = await parseForm(req);
     const file = files.file;
 
@@ -36,24 +38,19 @@ export default async function handler(
 
     const fileBuffer = await fs.readFile(singleFile.filepath);
     const fileContent = fileBuffer.toString('base64');
-    const rawResult = await callGemini(fileContent);
+
+    // Call n8n webhook for analysis instead of Gemini
+    const rawResult = await analyzeDocumentWithN8n(
+      fileContent,
+      singleFile.originalFilename || 'uploaded_file',
+      userId || undefined
+    );
 
     const normalizedData = normalizeData(
       rawResult,
       singleFile.originalFilename || 'uploaded_file'
     );
     normalizedData.summary.issueCount = normalizedData.issues.length;
-
-    // Temporarily disable screenshots for quick fix
-    // const screenshotUrls = await generateScreenshots(
-    //   fileBuffer,
-    //   singleFile.originalFilename || 'uploaded_file',
-    //   normalizedData.issues
-    // );
-
-    // normalizedData.issues.forEach((issue, index) => {
-    //   issue.screenshotUrl = screenshotUrls[index] || undefined;
-    // });
 
     const { error } = await saveToSupabaseServer(normalizedData);
     // Save to database
